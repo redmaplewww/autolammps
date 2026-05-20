@@ -1,0 +1,972 @@
+{
+  "date": "2026-04-25T00:09:10.153Z",
+  "cliDir": "F:\\opencode\\claude-code-main\\claude-code-main\\work\\temp\\CLI-self-extracted\\CLI-self",
+  "engine": "search",
+  "slots": [
+    {
+      "slotId": "anthropic-sonnet4",
+      "label": "Anthropic Sonnet 4 (Direct)",
+      "provider": "firstParty",
+      "model": "claude-sonnet-4-20250514",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 3081,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    },
+    {
+      "slotId": "anthropic-opus4",
+      "label": "Anthropic Opus 4 (Direct)",
+      "provider": "firstParty",
+      "model": "claude-opus-4-20250514",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 2944,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    },
+    {
+      "slotId": "anthropic-sonnet35-v2",
+      "label": "Anthropic Sonnet 3.5 v2 (Direct)",
+      "provider": "firstParty",
+      "model": "claude-3-5-sonnet-20241022",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 3052,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    },
+    {
+      "slotId": "anthropic-haiku4-5",
+      "label": "Anthropic Haiku 4.5 (Direct)",
+      "provider": "firstParty",
+      "model": "claude-haiku-4-5-20251001",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 3007,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    },
+    {
+      "slotId": "openrouter-anthropic",
+      "label": "OpenRouter → Anthropic (via proxy)",
+      "provider": "openai",
+      "model": "anthropic/claude-3-5-sonnet-20241022",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 3381,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    },
+    {
+      "slotId": "openrouter-qwen",
+      "label": "OpenRouter → Qwen (via proxy)",
+      "provider": "openai",
+      "model": "qwen/qwen3-30b-a3b",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 3701,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    },
+    {
+      "slotId": "bedrock-sonnet4",
+      "label": "AWS Bedrock Sonnet 4 (us-east-1)",
+      "provider": "bedrock",
+      "model": "us.anthropic.claude-sonnet-4-20250514-v1:0",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 2905,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    },
+    {
+      "slotId": "vertex-sonnet4",
+      "label": "Google Vertex AI Sonnet 4",
+      "provider": "vertex",
+      "model": "claude-sonnet-4@20250514",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 2947,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    },
+    {
+      "slotId": "groq-qwen",
+      "label": "Groq → Qwen 32B",
+      "provider": "openai",
+      "model": "qwen/qwen3-32b",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 3042,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    },
+    {
+      "slotId": "groq-llama",
+      "label": "Groq → Llama 4 Scout",
+      "provider": "openai",
+      "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 3011,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    },
+    {
+      "slotId": "openai-gpt4o",
+      "label": "OpenAI GPT-4o",
+      "provider": "openai",
+      "model": "gpt-4o",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 3095,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    },
+    {
+      "slotId": "gemini-2-5-pro",
+      "label": "Google Gemini 2.5 Pro",
+      "provider": "gemini",
+      "model": "gemini-2.5-pro-preview",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 3612,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    },
+    {
+      "slotId": "xai-grok3",
+      "label": "xAI Grok 3",
+      "provider": "grok",
+      "model": "grok-3",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 3627,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "totalSlots": 13,
+    "configuredSlots": 13,
+    "best": {
+      "slotId": "anthropic-sonnet4",
+      "label": "Anthropic Sonnet 4 (Direct)",
+      "provider": "firstParty",
+      "model": "claude-sonnet-4-20250514",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 3081,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    },
+    "worst": {
+      "slotId": "anthropic-sonnet4",
+      "label": "Anthropic Sonnet 4 (Direct)",
+      "provider": "firstParty",
+      "model": "claude-sonnet-4-20250514",
+      "configured": true,
+      "score": 171,
+      "total": 200,
+      "percent": 85.5,
+      "avgScore": 3.42,
+      "durationMs": 3081,
+      "engine": "search",
+      "error": null,
+      "exitCode": 0,
+      "categoryScores": {
+        "输入规则": {
+          "score": 35,
+          "max": 40,
+          "percent": "87.5"
+        },
+        "势函数": {
+          "score": 32,
+          "max": 40,
+          "percent": "80.0"
+        },
+        "命令语法": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        },
+        "案例检索": {
+          "score": 36,
+          "max": 40,
+          "percent": "90.0"
+        },
+        "工作流认知": {
+          "score": 34,
+          "max": 40,
+          "percent": "85.0"
+        }
+      },
+      "lowScoringQuestions": [
+        {
+          "id": "Q06",
+          "score": 2,
+          "prompt": "为什么一个模拟 run 完且没报错，仍然不能直接算成功？请按知识库规则回答。"
+        },
+        {
+          "id": "Q11",
+          "score": 2,
+          "prompt": "ReaxFF 输入最关键的电荷处理检查是什么？请按本地 confirmed lesson 回答。"
+        },
+        {
+          "id": "Q18",
+          "score": 2,
+          "prompt": "审查 force field 映射时，知识库的 checklist 要核对哪几项？"
+        },
+        {
+          "id": "Q23",
+          "score": 2,
+          "prompt": "压缩时 erate 的正负号怎么判定？请给出知识库中的说法。"
+        }
+      ]
+    },
+    "avgScore": 171
+  }
+}
