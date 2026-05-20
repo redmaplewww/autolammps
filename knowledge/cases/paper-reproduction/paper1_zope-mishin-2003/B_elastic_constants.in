@@ -1,0 +1,106 @@
+# B: γ-TiAl Elastic Constants via stress-strain method
+# Supercell: 3x3x3 = 54 atoms (2 atoms/cell * 27 cells)
+units metal
+atom_style atomic
+boundary p p p
+
+variable a0 equal 3.998
+variable c0 equal 3.998*1.047
+variable N equal 54
+variable conv equal 160.217  # eV/A^3 to GPa
+
+# L1₀ primitive cell: Al at (0,0,0), Ti at (0.5,0.5,0.5)
+lattice custom $(a0) a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 $(c0/a0) &
+  basis 0.0 0.0 0.0 basis 0.5 0.5 0.5
+region box block 0 3 0 3 0 3 units lattice
+create_box 2 box
+create_atoms 1 box basis 1 1 basis 2 2
+mass 1 26.982 mass 2 47.867
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Al Ti
+neighbor 2.0 bin neigh_modify delay 5 every 1
+
+# Fully relax
+fix 1 all box/relax x 0.0 y 0.0 z 0.0 couple none fixed 0 0 0
+minimize 1e-10 1e-10 10000 100000
+unfix 1
+
+variable V0 equal vol
+variable E0 equal pe
+
+# === Uniaxial x-strain ===
+# +x strain
+change_box all x scale 1.001 yz 0.0 remap
+run 0 pre no
+variable pxx_xp equal pxx
+variable pyy_xp equal pyy
+variable pzz_xp equal pzz
+change_box all x scale 1.0/1.001 yz 0.0 remap
+
+# -x strain
+change_box all x scale 0.999 yz 0.0 remap
+run 0 pre no
+variable pxx_xn equal pxx
+variable pyy_xn equal pyy
+variable pzz_xn equal pzz
+change_box all x scale 1.0/0.999 yz 0.0 remap
+
+# === Uniaxial z-strain ===
+# +z strain
+change_box all z scale 1.001 remap
+run 0 pre no
+variable pxx_zp equal pxx
+variable pyy_zp equal pyy
+variable pzz_zp equal pzz
+change_box all z scale 1.0/1.001 remap
+
+# -z strain
+change_box all z scale 0.999 remap
+run 0 pre no
+variable pxx_zn equal pxx
+variable pyy_zn equal pyy
+variable pzz_zn equal pzz
+change_box all z scale 1.0/0.999 remap
+
+# === Shear xy ===
+change_box all xy scale 0.001 remap
+run 0 pre no
+variable pxy_sh equal pxy
+change_box all xy scale -0.001 remap
+
+# === Shear xz ===
+change_box all xz scale 0.001 remap
+run 0 pre no
+variable pxz_sh equal pxz
+change_box all xz scale -0.001 remap
+
+# === Shear yz ===
+change_box all yz scale 0.001 remap
+run 0 pre no
+variable pyz_sh equal pyz
+change_box all yz scale -0.001 remap
+
+# For tetragonal 4mm: only C11,C12,C13,C33,C66 are independent
+# (C44=C55=0 in this model per paper Table IX)
+# C11 = dPxx/deps_x
+variable C11 equal (${pxx_xp}-${pxx_xn})*0.5*${conv}/0.002
+variable C12 equal (${pyy_xp}-${pyy_xn})*0.5*${conv}/0.002
+variable C13 equal (${pzz_xp}-${pzz_xn})*0.5*${conv}/0.002
+variable C33 equal (${pzz_zp}-${pzz_zn})*0.5*${conv}/0.002
+variable C66 equal abs(${pxy_sh})*${conv}/0.001
+
+print ""
+print "=============================================="
+print "  gamma-TiAl Elastic Constants (GPa)"
+print "=============================================="
+print "  C11 = ${C11}"
+print "  C12 = ${C12}"
+print "  C13 = ${C13}"
+print "  C33 = ${C33}"
+print "  C66 = ${C66}"
+print "  C44 (yz) = $(abs(v_pyz_sh)*${conv}/0.001)"
+print "  C55 (xz) = $(abs(v_pxz_sh)*${conv}/0.001)"
+print "=============================================="
+print "  Paper values: C11=195, C12=107, C13=89, C33=228, C66=115 GPa"
+print "=============================================="

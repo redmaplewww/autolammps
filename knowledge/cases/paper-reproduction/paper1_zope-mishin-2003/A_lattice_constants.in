@@ -1,0 +1,42 @@
+# A: gamma-TiAl Lattice Constants
+# L1_0 structure: 4-atom conventional cell, 4x4x4 = 256 atoms
+units metal
+atom_style atomic
+boundary p p p
+
+# L1_0 conventional cell
+# a = 3.998, c = 3.998*1.047 = 4.187
+# Al at (0,0,0), (0.5a,0.5a,0); Ti at (0.5a,0,0.5c), (0,0.5a,0.5c)
+# Basis atoms (fractional): 1:(0,0,0)->Al, 2:(0.5,0,0.5)->Ti, 3:(0,0.5,0.5)->Ti, 4:(0.5,0.5,0)->Al
+lattice custom 3.998 a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 4.187 basis 0.0 0.0 0.0 basis 0.5 0.0 0.5 basis 0.0 0.5 0.5 basis 0.5 0.5 0.0
+region simbox block 0 4 0 4 0 4 units lattice
+create_box 2 simbox
+create_atoms 1 box basis 1 2 basis 2 1 basis 3 1 basis 4 2
+
+mass 1 47.867
+mass 2 26.982
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+
+variable N equal count(all)
+print "Total atoms = ${N}"
+
+# No box relax - just minimize positions
+minimize 1e-10 1e-10 10000 100000
+
+variable a_eq equal lx/4
+variable c_eq equal lz/4
+variable ca_eq equal lz/lx
+variable E_pa equal pe/256
+
+print ""
+print "========== gamma-TiAl Lattice Constants =========="
+print "a = ${a_eq} Angstrom"
+print "c = ${c_eq} Angstrom"
+print "c/a = ${ca_eq}"
+print "E = ${E_pa} eV/atom"
+print "================================================="

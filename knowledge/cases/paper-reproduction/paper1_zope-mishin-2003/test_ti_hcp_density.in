@@ -1,0 +1,28 @@
+# Ti hcp test with electron density computation
+units metal
+atom_style atomic
+boundary p p p
+
+lattice custom 2.95 a1 1.0 0.0 0.0 a2 0.5 0.866025 0.0 a3 0.0 0.0 4.68165 basis 0.0 0.0 0.0 basis 0.666667 0.333333 0.5
+region r1 block 0 4 0 4 0 4 units lattice
+create_box 2 r1
+create_atoms 1 box basis 1 1 basis 2 1
+mass 1 47.867
+mass 2 26.982
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+
+compute rho all property/atom rho
+dump 1 all custom 1 dump.rho id c_rho x y z type
+dump_modify 1 sort id
+run 0
+
+variable r1 equal c_rho[1]
+variable r2 equal c_rho[2]
+print "Atom 1 density: ${r1}"
+print "Atom 2 density: ${r2}"
+
+compute p all pair/local phi
+compute r all compute pair/local phi
+fix 2 all ave/histo 1 1 1 0 6.73 100 c_p min below max p p rho
+print "Pair potential distribution"

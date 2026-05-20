@@ -1,0 +1,12 @@
+{
+  "env": {
+    "ANTHROPIC_API_KEY": "",
+    "ANTHROPIC_BASE_URL": "",
+    "OPENAI_API_KEY": "sk-cp-OwJtuF3iziNYnPHLv17eAbjzTtvUN6-hkk8EqmREjgg4hzWNjNN-lw0uG-EsphovUVF9HyXYSgjCCccuF8yg1Z982QfZvEOyTybDGgOHvpmzESiFHuZraPY",
+    "OPENAI_BASE_URL": "https://api.minimaxi.com/v1",
+    "OPENAI_MODEL": "MiniMax-M2.6"
+  },
+  "modelType": "openai",
+  "model": "MiniMax-M2.6",
+  "skipDangerousModePermissionPrompt": true
+}

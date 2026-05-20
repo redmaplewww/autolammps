@@ -1,0 +1,79 @@
+units metal
+atom_style atomic
+boundary p p p
+
+# TiAl L1_0: a=3.998, c=4.187
+# Using lattice custom with CORRECT basis
+# The L1_0 structure has:
+# - Al at (0,0,0) and (0.5a,0.5a,0)
+# - Ti at (0.5a,0,0.5c) and (0,0.5a,0.5c)
+
+# Define lattice vectors for the conventional L1_0 cell
+lattice custom 3.998 a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 4.187 &
+  basis 0.0 0.0 0.0 basis 0.5 0.0 0.5 basis 0.0 0.5 0.5 basis 0.5 0.5 0.0
+
+region box block 0 4 0 4 0 4 units lattice
+create_box 2 box
+
+# Al at basis 1,4 (type 2); Ti at basis 2,3 (type 1)
+create_atoms 1 box basis 1 2 basis 2 1 basis 3 1 basis 4 2
+
+mass 1 47.867  # Ti
+mass 2 26.982  # Al
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+
+# Print box dimensions
+variable lx0 equal lx
+variable ly0 equal ly
+variable lz0 equal lz
+variable ca0 equal lz/lx
+
+print ""
+print "Initial box: lx=${lx0}, ly=${ly0}, lz=${lz0}"
+print "Initial c/a = ${ca0}"
+
+# Relax box dimensions
+fix 1 all box/relax x 0.0 y 0.0 z 0.0
+minimize 1e-10 1e-10 10000 100000
+unfix 1
+
+variable natoms equal count(all)
+variable Etot equal pe
+variable Eper equal pe/count(all)
+variable a_eq equal lx/4
+variable c_eq equal lz/4
+variable ca_eq equal lz/lx
+
+group gTi type 1
+group gAl type 2
+variable nTi equal count(gTi)
+variable nAl equal count(gAl)
+
+print ""
+print "=============================================="
+print "TiAl L1_0 (relaxed)"
+print "Total atoms = ${natoms}, Ti=${nTi}, Al=${nAl}"
+print "Equilibrium: a=${a_eq}, c=${c_eq}, c/a=${ca_eq}"
+print "Total energy = ${Etot} eV"
+print "Energy per atom = ${Eper} eV"
+print ""
+print "Expected from paper:"
+print "  a=3.998, c/a=1.047, E=-4.509 eV/atom"
+print "  Formation energy = -0.404 eV/atom"
+print "=============================================="
+
+# Also compute formation energy
+# E_form = E_pot(TiAl) - 0.5*E_pot(Ti) - 0.5*E_pot(Al)
+# E_pot(Ti) ≈ -4.843 (from test above)
+# E_pot(Al) = -3.36
+variable E_Al equal -3.36
+variable E_Ti equal -4.843
+variable E_form equal ${Eper} - 0.5*${E_Ti} - 0.5*${E_Al}
+print ""
+print "Formation energy = ${E_form} eV/atom"
+print "Expected formation = -0.404 eV/atom"

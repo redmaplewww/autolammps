@@ -1,0 +1,12 @@
+{
+  "env": {
+    "ANTHROPIC_API_KEY": "sk-sp-djI.646CogXCccsy-Gv6brTk0K5_QAtYcDP7h0s7G2VDTE9ceJjb7TSqjAy1F-QskBjJWLXa9cCInmtv3pL2IZ9Oap5qhoc06kPL0rQx5WtQWEiaooimi0T6QWSkVtP_xTtR5kaUA8BliYNLkZuvPxO3GgAmHrEvRcFp7SItvt1wZ0sCTFWjhWg9SCMCe86MU_9e",
+    "ANTHROPIC_BASE_URL": "https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic",
+    "OPENAI_API_KEY": "",
+    "OPENAI_BASE_URL": "",
+    "OPENAI_MODEL": ""
+  },
+  "modelType": "anthropic",
+  "model": "qwen3.6-plus",
+  "skipDangerousModePermissionPrompt": true
+}

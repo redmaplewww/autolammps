@@ -1,0 +1,122 @@
+# Paper 1C: TiAl and Ti3Al Formation Energies
+# Zope & Mishin 2003, PRB 68, 024102
+# Ref: TiAl L10 = -0.404 eV/atom, Ti3Al D019 = -0.289 eV/atom
+
+units metal
+atom_style atomic
+boundary p p p
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+
+# ============================================================
+# 1. gamma-TiAl L10 cohesive energy (2 atoms: 1 Ti + 1 Al)
+# ============================================================
+variable a0 equal 3.998
+variable c0 equal 3.998*1.047
+
+lattice custom ${a0} &
+  a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 ${c0} &
+  basis 0.0 0.0 0.0 basis 0.5 0.5 0.0 &
+  basis 0.5 0.0 0.5 basis 0.0 0.5 0.5
+
+region box block 0 4 0 4 0 4 units lattice
+create_box 2 box
+create_atoms 1 box
+set type 1 mass 47.867
+set type 2 mass 26.982
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+minimize 1e-14 1e-14 50000 500000
+run 0
+
+variable E_tial equal pe
+variable N_tial equal count(all)
+variable Ecoh_tial equal pe/atoms
+variable Eform_tial equal pe/2 - 0.5*v_Ecoh_tial - 0.5*v_Ecoh_tial
+
+print ""
+print "Step 1: gamma-TiAl L10 (2 atoms, stoichiometric)"
+print "PE total = ${E_tial} eV"
+print "PE/atom  = ${Ecoh_tial} eV"
+
+# ============================================================
+# 2. alpha-Ti (hcp) cohesive energy
+# ============================================================
+clear
+units metal
+atom_style atomic
+boundary p p p
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+
+lattice hcp 2.95056
+region tibox block 0 4 0 4 0 4 units lattice
+create_box 1 tibox
+create_atoms 1 box
+set type 1 mass 47.867
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+minimize 1e-14 1e-14 50000 500000
+run 0
+
+variable E_ti_hcp equal pe
+variable N_ti equal count(all)
+variable Ecoh_ti equal pe/N_ti
+
+print ""
+print "Step 2: alpha-Ti hcp"
+print "PE total = ${E_ti_hcp} eV,  N = ${N_ti}"
+print "Ecoh/Ti = ${Ecoh_ti} eV/atom"
+
+# ============================================================
+# 3. Al (fcc) cohesive energy
+# ============================================================
+clear
+units metal
+atom_style atomic
+boundary p p p
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+
+lattice fcc 4.050
+region albox block 0 4 0 4 0 4 units lattice
+create_box 1 albox
+create_atoms 1 box
+set type 1 mass 26.982
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+minimize 1e-14 1e-14 50000 500000
+run 0
+
+variable E_al_fcc equal pe
+variable N_al equal count(all)
+variable Ecoh_al equal pe/N_al
+
+print ""
+print "Step 3: Al fcc"
+print "PE total = ${E_al_fcc} eV,  N = ${N_al}"
+print "Ecoh/Al = ${Ecoh_al} eV/atom"
+
+# ============================================================
+# 4. Formation energies
+# ============================================================
+# TiAl L10: Eform = E(TiAl)/2 - 0.5*Ecoh(Ti) - 0.5*Ecoh(Al)
+variable Eform_tial2 equal ${E_tial}/2 - 0.5*${Ecoh_ti} - 0.5*${Ecoh_al}
+
+print ""
+print "================================================"
+print "Paper 1C: Formation Energies"
+print "================================================"
+print "Ref: Zope & Mishin 2003, PRB 68, 024102"
+print "------------------------------------------------"
+print "gamma-TiAl L10:"
+print "  Computed Eform = ${Eform_tial2} eV/atom"
+print "  Reference      = -0.404 eV/atom"
+print ""
+print "Note: Requires Ti3Al D019 structure for full comparison."
+print "Cohesive energy comparison:"
+print "  TiAl:  ${Ecoh_tial} eV/atom (ref: 4.509)"
+print "  Ti(hp): ${Ecoh_ti} eV/atom"
+print "  Al(fc): ${Ecoh_al} eV/atom"
+print "================================================"

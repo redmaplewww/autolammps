@@ -1,0 +1,63 @@
+units metal
+atom_style atomic
+boundary p p p
+
+# Try BOTH orderings and compare
+
+# ORDERING A: Al at (0,0,0),(0.5,0.5,0); Ti at (0.5,0,0.5),(0,0.5,0.5)
+# ORDERING B: Ti at (0,0,0),(0.5,0.5,0); Al at (0.5,0,0.5),(0,0.5,0.5)
+
+print ""
+print "=========================================="
+print "ORDERING A: Al at corners, Ti at edges"
+print "=========================================="
+lattice custom 3.998 a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 4.187 &
+  basis 0.0 0.0 0.0 basis 0.5 0.0 0.5 basis 0.0 0.5 0.5 basis 0.5 0.5 0.0
+region boxA block 0 2 0 2 0 2 units lattice
+create_box 2 boxA
+# Al at basis 1,4 (type 2); Ti at basis 2,3 (type 1)
+create_atoms 1 box basis 1 2 basis 2 1 basis 3 1 basis 4 2
+mass 1 47.867
+mass 2 26.982
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+minimize 1e-10 1e-10 10000 100000
+variable EA equal pe/count(all)
+group gTiA type 1
+group gAlA type 2
+variable nTiA equal count(gTiA)
+variable nAlA equal count(gAlA)
+print "Atoms: Ti=${nTiA}, Al=${nAlA}, E=${EA} eV/atom"
+
+clear
+
+print ""
+print "=========================================="
+print "ORDERING B: Ti at corners, Al at edges"
+print "=========================================="
+lattice custom 3.998 a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 4.187 &
+  basis 0.0 0.0 0.0 basis 0.5 0.0 0.5 basis 0.0 0.5 0.5 basis 0.5 0.5 0.0
+region boxB block 0 2 0 2 0 2 units lattice
+create_box 2 boxB
+# Ti at basis 1,4 (type 1); Al at basis 2,3 (type 2)
+create_atoms 1 box basis 1 1 basis 2 2 basis 3 2 basis 4 1
+mass 1 47.867
+mass 2 26.982
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+minimize 1e-10 1e-10 10000 100000
+variable EB equal pe/count(all)
+group gTiB type 1
+group gAlB type 2
+variable nTiB equal count(gTiB)
+variable nAlB equal count(gAlB)
+print "Atoms: Ti=${nTiB}, Al=${nAlB}, E=${EB} eV/atom"
+
+print ""
+print "=========================================="
+print "Expected E_pot = -4.509 eV/atom"
+print "=========================================="

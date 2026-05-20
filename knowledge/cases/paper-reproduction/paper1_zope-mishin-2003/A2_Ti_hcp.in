@@ -1,0 +1,14 @@
+units metal
+atom_style atomic
+boundary p p p
+lattice hcp 2.95
+region box block 0 4 0 4 0 3 units lattice
+create_box 1 box
+create_atoms 1 box
+mass 1 47.867
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti
+neighbor 2.0 bin
+minimize 1e-10 1e-10 10000 100000
+variable E equal pe/count(all)
+print "RESULT_E_Ti = ${E}"

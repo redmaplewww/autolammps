@@ -1,0 +1,46 @@
+units metal
+atom_style atomic
+boundary p p p
+
+variable a equal 3.998
+variable c equal 4.187
+
+region box block 0 ${a} 0 ${a} 0 ${c} units box
+create_box 2 box
+
+# Al at (0,0,0) - type 2
+create_atoms 2 single 0.0 0.0 0.0
+# Ti at (0.5a, 0, 0.5c) - type 1
+create_atoms 1 single $(0.5*v_a) 0.0 $(0.5*v_c)
+# Ti at (0, 0.5a, 0.5c) - type 1
+create_atoms 1 single 0.0 $(0.5*v_a) $(0.5*v_c)
+# Al at (0.5a, 0.5a, 0) - type 2
+create_atoms 2 single $(0.5*v_a) $(0.5*v_a) 0.0
+
+mass 1 47.867
+mass 2 26.982
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+
+minimize 1e-10 1e-10 10000 100000
+
+variable natoms equal count(all)
+variable Etot equal pe
+variable Eper equal pe/count(all)
+group gTi type 1
+group gAl type 2
+variable nTi equal count(gTi)
+variable nAl equal count(gAl)
+
+print ""
+print "=========================================="
+print "TiAl L1_0 (explicit Cartesian, 4 atoms)"
+print "Total atoms = ${natoms}, Ti=${nTi}, Al=${nAl}"
+print "Energy = ${Etot} eV total"
+print "Energy per atom = ${Eper} eV"
+print "Expected: -4.509 eV/atom"
+print "=========================================="

@@ -1,0 +1,9 @@
+units metal
+atom_style atomic
+boundary p p p
+lattice custom 3.998 a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 4.187 basis 0.0 0.0 0.0 basis 0.5 0.0 0.5 basis 0.0 0.5 0.5 basis 0.5 0.5 0.0
+region r1 block 0 2 0 2 0 2 units lattice
+create_box 2 r1
+create_atoms 1 box basis 1 1 basis 2 2 basis 3 2 basis 4 1
+variable N equal count(all)
+print "N = ${N}"

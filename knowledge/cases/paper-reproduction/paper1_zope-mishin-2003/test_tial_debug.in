@@ -1,0 +1,45 @@
+units metal
+atom_style atomic
+boundary p p p
+
+# Test TiAl L1_0 with small supercell (2x2x2 = 64 atoms)
+# L1_0 conventional cell: 4 atoms
+# a = 3.998, c = 3.998*1.047 = 4.187
+
+lattice custom 3.998 a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 4.187 &
+  basis 0.0 0.0 0.0 basis 0.5 0.0 0.5 basis 0.0 0.5 0.5 basis 0.5 0.5 0.0
+
+region box block 0 2 0 2 0 2 units lattice
+create_box 2 box
+# Basis 1: Al, Basis 2: Ti, Basis 3: Ti, Basis 4: Al
+create_atoms 1 box basis 1 2 basis 2 1 basis 3 1 basis 4 2
+
+mass 1 47.867
+mass 2 26.982
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+
+# Compute per-atom energies
+compute peA all pe/atom
+
+# Output structure info
+variable natoms equal count(all)
+variable Etot equal pe
+variable Eper equal pe/count(all)
+
+print ""
+print "========== TiAl L1_0 Test (64 atoms) =========="
+print "Total atoms = ${natoms}"
+print "Total potential energy = ${Etot} eV"
+print "Energy per atom = ${Eper} eV"
+print "Expected: -4.509 eV/atom"
+print "=============================================="
+
+minimize 1e-10 1e-10 10000 100000
+variable Eper2 equal pe/count(all)
+print "After minimization:"
+print "Energy per atom = ${Eper2} eV"

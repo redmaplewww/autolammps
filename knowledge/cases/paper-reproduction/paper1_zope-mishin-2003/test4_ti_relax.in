@@ -1,0 +1,20 @@
+units metal
+atom_style atomic
+boundary p p p
+# Use standard hcp lattice
+lattice hcp 2.95
+region box block 0 6 0 6 0 3 units lattice
+create_box 1 box
+create_atoms 1 box
+mass 1 47.867
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti
+# Minimize with box relaxation
+minimize 1e-10 1e-10 10000 100000
+variable a0 equal vol^(1.0/3.0)
+variable c0 equal (lz/lx)*2.95*sqrt(2/3)
+variable E equal pe/count(all)
+print ""
+print "Ti hcp after relaxation:"
+print "E = ${E} eV/atom"
+print "Expected: ~-4.87 eV/atom"

@@ -30,14 +30,8 @@ src/utils/vendor/
 
 # Session data
 .angsheng/sessions/
-.angsheng/.angsheng.json
 .angsheng/backups/
 .angsheng/projects/
-.angsheng/provider-configs/
-.angsheng/providers/
-.angsheng/settings.json
-.angsheng/settings.json.bak
-.angsheng/settings.local.json
 .angsheng/plugins/
 .angsheng/shell-snapshots/
 .angsheng/teams/
@@ -55,9 +49,20 @@ work/
 *.zip
 *.7z
 *.sqlite
-*.lmp
-*.lammpstrj
-*.data
+
+# Exclude bulky simulation assets by default
+knowledge/cases/raw/
+knowledge/cases/paper-reproduction/**/*.eam*
+knowledge/cases/paper-reproduction/**/*.lammpstrj
+knowledge/cases/paper-reproduction/**/*.data
+knowledge/cases/paper-reproduction/**/*.plt
+knowledge/cases/paper-reproduction/**/*.csv
+knowledge/cases/paper-reproduction/**/log.lammps
+
+# Root/local simulation scratch files
+/*.lmp
+/*.lammpstrj
+/*.data
 
 # Python bytecode
 __pycache__/

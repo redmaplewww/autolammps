@@ -1,0 +1,78 @@
+# Paper 1A: gamma-TiAl Lattice Constants
+# Zope & Mishin 2003, PRB 68, 024102
+# L10: Ti at x=0 sublattice, Al at x=0.5a sublattice
+units metal
+atom_style atomic
+boundary p p p
+
+variable a0 equal 3.998
+variable c0 equal ${a0}*1.047
+
+variable Lx equal 4*${a0}
+variable Ly equal 2*${a0}
+variable Lz equal 2*${c0}
+
+region box block 0 ${Lx} 0 ${Ly} 0 ${Lz} units box
+create_box 2 box
+
+lattice custom 1.0 &
+  a1 ${a0} 0.0 0.0 &
+  a2 0.0 ${a0} 0.0 &
+  a3 0.0 0.0 ${c0} &
+  basis 0.0 0.0 0.0 &
+  basis 0.0 0.5 0.5
+create_atoms 1 box
+
+lattice custom 1.0 &
+  a1 ${a0} 0.0 0.0 &
+  a2 0.0 ${a0} 0.0 &
+  a3 0.0 0.0 ${c0} &
+  basis 0.5 0.0 0.0 &
+  basis 0.5 0.5 0.5
+create_atoms 2 box
+
+mass 1 47.867
+mass 2 26.982
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+
+variable Na equal count(all)
+group Ti_g type 1
+group Al_g type 2
+variable nTi equal count(Ti_g)
+variable nAl equal count(Al_g)
+
+print ""
+print "Initial structure: Ti=${nTi}, Al=${nAl} (expect 32 each)"
+print "Total atoms=${Na} (expect 64)"
+
+thermo 100
+thermo_style custom step pe atoms
+
+minimize 1e-12 1e-12 50000 500000
+
+variable Ecoh equal $(pe/atoms)
+variable a_eq equal lx/4
+variable c_eq equal lz/2
+variable ca equal ${c_eq}/${a_eq}
+
+print ""
+print "================================================"
+print "Paper 1A: gamma-TiAl Lattice Constants"
+print "================================================"
+print "Ref: Zope & Mishin 2003, PRB 68, 024102"
+print "------------------------------------------------"
+print "Total atoms = ${Na} (expect 64: 32 Ti + 32 Al)"
+print "Ti = ${nTi}, Al = ${nAl}"
+print ""
+print "After minimization:"
+print "  Avg PE/atom = ${Ecoh} eV"
+print "  a = ${a_eq} A  (ref: 3.998 A)"
+print "  c = ${c_eq} A  (ref: 4.187 A)"
+print "  c/a = ${ca}     (ref: 1.047)"
+print ""
+print "Paper target Ecohesive: 4.509 eV/atom"
+print "================================================"

@@ -1,0 +1,64 @@
+# Pure element reference energies: Ti hcp and Al fcc
+units metal
+atom_style atomic
+boundary p p p
+
+# ===== Pure Al fcc =====
+variable a_al equal 4.05
+lattice fcc ${a_al}
+region r_al block 0 4 0 4 0 4 units lattice
+create_box 1 r_al
+create_atoms 1 box
+mass 1 26.982
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Al Al
+neighbor 2.0 bin neigh_modify delay 5 every 1
+
+fix 1 all box/relax iso 0.0
+minimize 1e-10 1e-10 10000 100000
+unfix 1
+
+variable E_al equal pe
+variable E_al_pa equal pe/count(all)
+print ""
+print "E_coh(Al, fcc) = ${E_al_pa} eV/atom"
+
+# ===== Pure Ti hcp =====
+clear
+units metal
+atom_style atomic
+boundary p p p
+
+variable a_ti equal 2.95
+variable c_ti equal 2.95*1.587
+
+lattice custom $(a_ti) &
+  a1 1.0 0.0 0.0 &
+  a2 0.5 0.866025403784 0.0 &
+  a3 0.0 0.0 $(c_ti/a_ti) &
+  basis 0.0 0.0 0.0 &
+  basis 0.666667 0.333333 0.5
+
+region r_ti block 0 4 0 4 0 4 units lattice
+create_box 1 r_ti
+create_atoms 1 box basis 1 1 basis 2 1
+mass 1 47.867
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Ti
+neighbor 2.0 bin neigh_modify delay 5 every 1
+
+fix 1 all box/relax iso 0.0
+minimize 1e-10 1e-10 10000 100000
+unfix 1
+
+variable E_ti equal pe
+variable E_ti_pa equal pe/count(all)
+print "E_coh(Ti, hcp) = ${E_ti_pa} eV/atom"
+print ""
+print "===================================="
+print "Paper values for comparison:"
+print "E_coh(Al) = 3.36 eV/atom (from Al fcc EAM)"
+print "E_coh(Ti) = 4.87 eV/atom (from Ti hcp EAM)"
+print "===================================="

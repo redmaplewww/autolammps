@@ -1,0 +1,76 @@
+# Paper 2: Ni/Ni3Al tensile workflow scaffold
+# Qin 2024 style: relax -> equilibrate -> tensile loading
+
+units metal
+atom_style atomic
+boundary p p p
+
+variable alat equal 3.57
+variable xmid equal 4*${alat}
+variable xhi equal 8*${alat}
+variable yhi equal 4*${alat}
+variable zhi equal 4*${alat}
+
+region whole block 0 ${xhi} 0 ${yhi} 0 ${zhi} units box
+create_box 2 whole
+
+# left half: pure Ni (fcc)
+lattice fcc ${alat}
+region left block 0 ${xmid} 0 ${yhi} 0 ${zhi} units box
+create_atoms 1 region left
+
+# right half: ordered Ni3Al (L12)
+lattice custom ${alat} &
+  a1 1.0 0.0 0.0 &
+  a2 0.0 1.0 0.0 &
+  a3 0.0 0.0 1.0 &
+  basis 0.0 0.0 0.0 &
+  basis 0.0 0.5 0.5 &
+  basis 0.5 0.0 0.5 &
+  basis 0.5 0.5 0.0
+region right block 14.280001 ${xhi} 0 ${yhi} 0 ${zhi} units box
+create_atoms 1 region right basis 1 2 basis 2 1 basis 3 1 basis 4 1
+
+mass 1 58.6934
+mass 2 26.9815
+
+pair_style eam/alloy
+pair_coeff * * NiAl_Mishin_2004.eam.alloy Ni Al
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+
+group ni type 1
+group al type 2
+variable nNi equal count(ni)
+variable nAl equal count(al)
+
+print "Initial atoms: Ni=${nNi}, Al=${nAl}, total=$(atoms)"
+
+timestep 0.001
+compute t all temp
+compute p all pressure t
+
+# relax interface
+fix relax all npt temp 300 300 0.1 y 0 0 1 z 0 0 1 couple none
+thermo 200
+thermo_style custom step temp pe lx ly lz c_p[1] c_p[2] c_p[3]
+run 5000
+unfix relax
+
+variable lx0 equal $(lx)
+
+# short equilibration
+fix eq all nvt temp 300 300 0.1
+run 2000
+unfix eq
+
+# tensile loading along x
+fix load all nvt temp 300 300 0.1
+fix deformx all deform 1 x final 0.0 29.273 remap x
+variable strain equal "(lx-v_lx0)/v_lx0"
+variable stress equal "-c_p[1]/10000.0"
+thermo 100
+thermo_style custom step v_strain v_stress temp c_p[1]
+run 5000
+
+print "PAPER2_RESULT nNi=${nNi} nAl=${nAl} lx0=${lx0} lx=$(lx) stressGPa=${stress}"

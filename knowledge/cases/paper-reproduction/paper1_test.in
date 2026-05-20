@@ -1,0 +1,186 @@
+# gamma-TiAl L10: Correct structure with proper atom types
+units metal
+atom_style atomic
+boundary p p p
+
+variable a equal 3.998
+variable c equal 3.998*1.047
+variable Lz equal 4*${c}
+
+# L10 conventional cell with 4 atoms
+lattice custom 1.0 &
+  a1 ${a} 0.0 0.0 &
+  a2 0.0 ${a} 0.0 &
+  a3 0.0 0.0 ${c} &
+  basis 0.0 0.0 0.0 &
+  basis 0.5 0.5 0.5 &
+  basis 0.5 0.0 0.25 &
+  basis 0.0 0.5 0.75
+
+region box block 0 1 0 1 0 1 units lattice
+create_box 1 box
+create_atoms 1 box
+mass 1 47.867
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+
+# Replicate to 4x4x4 = 128 atoms (all type 1 initially)
+replicate 4 4 4
+
+# Al atoms: z in [c/4, 3c/4) OR z in [5c/4, 7c/4) etc.
+# Ti atoms: z in [0, c/4) OR z in [3c/4, 5c/4) etc.
+variable c4 equal ${c}/4
+variable c34 equal 3*${c}/4
+
+group Al_layer type 1
+group Ti_layer type 1
+
+# Use coord-based grouping
+# Al: atoms with z in [c/4, 3c/4) U [5c/4, 7c/4) U ...
+# More precisely: z modulo c in [c/4, 3c/4)
+# Ti: z modulo c in [0, c/4) U [3c/4, c)
+
+# Set Al atoms
+variable zmod equal "z - floor(z/c)*c"
+set group Al_layer property/atom z zmod
+compute zatom all property/atom z
+
+# Simple approach: set atoms by their ID range
+# After replication, atoms are ordered by their position
+# ID 1-64: z in [0, c), ID 65-128: z in [c, 2c)
+# In each c-height slab: atoms 1-32: z in [0, c/4) or [3c/4, c) = Ti
+#                         atoms 33-64: z in [c/4, 3c/4) = Al
+
+# Actually simpler: use the atom's z-coordinate
+# Al atoms have z_mod in [c/4, 3c/4)
+# Let me use computereduce to identify them
+
+# Re-approach: create atoms correctly from scratch using 2 lattices
+# 1. Ti sublattice
+# 2. Al sublattice (shifted)
+
+print ""
+print "Atom creation complete. Count = $(count)"
+print "Now identifying atom types by z-coordinate..."
+
+# Strategy: delete atoms at Al positions and recreate as type 2
+# Or: use velocity to identify (but no velocities yet)
+# Best: use the fact that after minimization, we know the structure
+
+# Actually let me just compute with all atoms as type 1 first
+# The pair_style eam/alloy with * * Ti Al will handle cross terms
+# BUT the types matter: type 1=Ti, type 2=Al
+
+# Let me try a different tactic:
+# Build 2x2x2 cells (16 atoms), identify types, then replicate
+
+print ""
+print "Proceeding with current setup (all atoms type 1)"
+print "Note: EAM will treat all as Ti, energy will be wrong"
+print "Need to fix atom types next"
+
+# For now, just minimize with current setup to get rough energy
+minimize 1e-12 1e-12 1000 10000
+
+variable Ecoh_allTi calc "pe/atoms * -1"
+print ""
+print "With all atoms as Ti: PE/atom = $(pe/atoms), Ecoh = ${Ecoh_allTi}"
+
+# Now fix: identify atoms in Al planes and change type
+# Al z-positions: z_mod in [c/4, 3c/4)
+# Compute z_mod for each atom
+variable zmodAl equal "z - floor(z/${c})*${c}"
+compute 1 all property/atom z
+compute 2 all reduce min c_1
+compute 3 all reduce max c_1
+
+# Set type=2 for atoms where z_mod in [c/4, 3c/4)
+# This is tricky in LAMMPS without scripting
+# Use iset option with if condition
+
+# More practical: use isosurface or region
+# Al planes are at z = c/4 + n*c to 3c/4 + n*c
+
+clear
+units metal
+atom_style atomic
+boundary p p p
+
+# Try the 2-sublattice approach
+variable a equal 3.998
+variable c equal 3.998*1.047
+
+# Create box
+region simbox prism 0 4 ${a} 0 4 ${a} 0 0 4 ${c} 0 0 units box
+create_box 2 simbox
+
+# Create Ti atoms (z = n*c, n=0,1,2,3)
+# Ti at (i*a, j*a, k*c) for i,j,k=0,1,2,3
+# 4x4x4 = 64 Ti atoms
+variable ix loop 4
+label tiloop
+variable iy loop 4
+  variable iz loop 4
+    variable xt equal ${ix}*${a}
+    variable yt equal ${iy}*${a}
+    variable zt equal ${iz}*${c}
+    create_atoms 1 single ${xt} ${yt} ${zt} units box
+  next iz
+  next iy
+  next ix
+
+# Create Al atoms (z = c/4 + n*c, n=0,1,2,3)
+# Al at (i*a, j*a, c/4 + k*c) for i,j,k=0,1,2,3
+# BUT need to account for the y-shift: (0.5a,0,c/4) and (0,0.5a,c/4)
+# So Al atoms form 2 sublattices in xy: shift_x=0.5a AND shift_y=0
+
+variable jx loop 4
+label aloop
+variable jy loop 4
+  variable jz loop 4
+    # Al sublattice 1: shift (0.5a, 0)
+    variable xa1 equal (${jx}+0.5)*${a}
+    variable ya1 equal ${jy}*${a}
+    variable za1 equal (${jz}+0.25)*${c}
+    create_atoms 2 single ${xa1} ${ya1} ${za1} units box
+    # Al sublattice 2: shift (0, 0.5a)
+    variable xa2 equal ${jx}*${a}
+    variable ya2 equal (${jy}+0.5)*${a}
+    variable za2 equal (${jz}+0.25)*${c}
+    create_atoms 2 single ${xa2} ${ya2} ${za2} units box
+  next jz
+  next jy
+next jx
+
+mass 1 47.867
+mass 2 26.982
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+
+minimize 1e-12 1e-12 50000 500000
+run 0
+
+variable Na equal count(all)
+variable Ecoh calc "pe/atoms * -1"
+variable a_eq equal lx/4
+variable c_eq equal lz/4
+variable ca calc "c_eq/a_eq"
+
+print ""
+print "================================================"
+print "gamma-TiAl L10 (Correct Structure, Ti+Al types)"
+print "================================================"
+print "Atoms = ${Na} (expect 128: 64 Ti + 64 Al)"
+print "PE/atom = $(pe/atoms) eV"
+print "Ecohesive = ${Ecoh} eV/atom  (ref: 4.509)"
+print "  a = ${a_eq}  (ref: 3.998)"
+print "  c = ${c_eq}  (ref: 4.187)"
+print "  c/a = ${ca}  (ref: 1.047)"
+print "================================================"

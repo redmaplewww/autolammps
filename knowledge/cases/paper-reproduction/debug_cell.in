@@ -1,0 +1,22 @@
+units metal
+atom_style atomic
+boundary p p p
+variable a0 equal 3.998
+variable c0 equal 3.998*1.047
+
+lattice custom ${a0} a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 ${c0} basis 0.0 0.0 0.0 basis 0.5 0.5 0.0 basis 0.5 0.0 0.5 basis 0.0 0.5 0.5
+region box block 0 2 0 2 0 2 units lattice
+create_box 2 box
+create_atoms 1 box
+mass 1 47.867 mass 2 26.982
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+neighbor 2.0 bin
+minimize 1e-14 1e-14 1000 10000
+run 0
+print "lx=${lx} ly=${ly} lz=${lz}"
+print "xlat=${xlat} ylat=${ylat} zlat=${zlat}"
+variable a_eq equal lx/2
+variable c_eq equal lz/2
+variable ca_eq equal lz/lx
+print "a=${a_eq} c=${c_eq} c/a=${ca_eq}"

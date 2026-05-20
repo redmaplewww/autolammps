@@ -1,0 +1,6 @@
+{
+  "enabledMcpjsonServers": [
+    "lammps-ai-engine"
+  ],
+  "enableAllProjectMcpServers": true
+}

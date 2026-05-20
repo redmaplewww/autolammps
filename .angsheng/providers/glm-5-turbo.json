@@ -1,0 +1,12 @@
+{
+  "env": {
+    "ANTHROPIC_API_KEY": "c1396573aaec4c4c9b2b3bbfc5352f84.4cVppRi5GZPUKmxe",
+    "ANTHROPIC_BASE_URL": "https://open.bigmodel.cn/api/anthropic",
+    "OPENAI_API_KEY": "",
+    "OPENAI_BASE_URL": "",
+    "OPENAI_MODEL": ""
+  },
+  "modelType": "anthropic",
+  "model": "glm-5-turbo",
+  "skipDangerousModePermissionPrompt": true
+}

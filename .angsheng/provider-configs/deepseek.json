@@ -1,0 +1,12 @@
+{
+  "env": {
+    "ANTHROPIC_API_KEY": "sk-b77f84e1ff5d49bfac00c429daa7f885",
+    "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
+    "OPENAI_API_KEY": "",
+    "OPENAI_BASE_URL": "",
+    "OPENAI_MODEL": ""
+  },
+  "modelType": "anthropic",
+  "model": "deepseek-v4-flush",
+  "skipDangerousModePermissionPrompt": true
+}

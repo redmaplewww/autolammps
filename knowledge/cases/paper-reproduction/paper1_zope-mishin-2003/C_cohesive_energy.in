@@ -1,0 +1,31 @@
+# C: Cohesive energies of TiAl, pure Ti (hcp), and pure Al (fcc)
+# Compute E_coh for each to get formation energies
+units metal
+atom_style atomic
+boundary p p p
+
+# ======= TiAl L1₀ (4x4x4 = 256 atoms) =======
+variable a0 equal 3.998
+variable c0 equal 3.998*1.047
+
+lattice custom $(a0) a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 $(c0/a0) basis 0.0 0.0 0.0 basis 0.5 0.5 0.5
+region r1 block 0 4 0 4 0 4 units lattice
+create_box 2 r1
+create_atoms 1 box basis 1 1 basis 2 2
+mass 1 26.982 mass 2 47.867
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Al Ti
+neighbor 2.0 bin neigh_modify delay 5 every 1
+
+fix 1 all box/relax x 0.0 y 0.0 z 0.0 couple none fixed 0 0 0
+minimize 1e-10 1e-10 10000 100000
+unfix 1
+
+variable N_tial equal count(all)
+variable E_tial equal pe
+variable E_tial_pa equal pe/${N_tial}
+
+print ""
+print "========================================="
+print "TiAl L1_0: ${E_tial_pa} eV/atom"
+print "========================================="

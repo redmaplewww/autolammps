@@ -1,0 +1,268 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <script async="true" src="https://www.googletagmanager.com/gtag/js?id=G-YVKJ4JD82N">//</script>
+    <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-YVKJ4JD82N');
+        </script>
+    <script async="true" type="text/javascript" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=DOC&amp;subagency=NIST" id="_fed_an_ua_tag">//</script>
+    <!-- Define website metadata -->
+    <meta charset="utf-8"/>
+    <!--[if IE]> <meta http-equiv="X-UA-Compatible" content="IE=edge"/> <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="description" content="This repository provides a source for interatomic potentials (force fields), related files, and evaluation tools to help researchers obtain interatomic models and judge their quality and applicability. Users are encouraged to download and use interatomic potentials, with proper acknowledgement, and developers are welcome to contribute potentials for inclusion. The files provided have been submitted or vetted by their developers and appropriate references are provided. All classes of potentials (e.g., MEAM, ADP, COMB, Reax, EAM, etc.) and materials are welcome. Interatomic potentials and/or related files are currently available for various metals, semiconductors, oxides, and carbon-containing systems."/>
+    <meta name="author" content="Chandler A. Becker"/>
+    <meta name="author" content="Zachary T. Trautt"/>
+    <meta name="author" content="Lucas M. Hale"/>
+    <title>Interatomic Potentials Repository</title>
+    <!-- Jupyter Notebook -->
+    <link rel="stylesheet" href="../../site/pygments.css"/>
+    <link rel="stylesheet" href="../../site/nbsphinx-code-cells.css"/>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js">//</script>
+    <!-- Latex MathJax converter -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">//</script>
+    <!-- NIST Header/Footer -->
+    <link rel="stylesheet" href="https://pages.nist.gov/nist-header-footer/css/nist-combined.css"/>
+    <script src="https://pages.nist.gov/nist-header-footer/js/nist-header-footer.js" type="text/javascript" defer="defer">//</script>
+    <!-- Show old implementation files buttons -->
+    <script src="../../site/showFiles.js">//</script>
+    <!-- Calculation property tools -->
+    <script src="../../site/showSelection.js">//</script>
+    <link rel="stylesheet" href="../../site/tablestyle.css"/>
+    <!-- Periodic Table -->
+    <script src="../../site/activate-element-links.js">//</script>
+    <script src="../../site/create-alloy-table.js">//</script>
+    <link rel="stylesheet" href="../../site/periodic-table.css"/>
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"/>
+    <!-- Custom styles for this template -->
+    <link href="../../site/bootstrap/css/navbar-static-top.css" rel="stylesheet"/>
+    <link href="../../site/bootstrap/css/grid.css" rel="stylesheet"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]> <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script> <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script> <![endif]-->
+    <!-- local CSS -->
+    <link href="../../site/local.css" rel="stylesheet"/>
+    <!-- Leave Notice -->
+    <script type="text/javascript" src="https://pages.nist.gov/leaveNotice/js/jquery.leaveNotice-nist.min.js">//</script>
+    <link rel="stylesheet" type="text/css" href="https://pages.nist.gov/leaveNotice/css/jquery.leaveNotice.css"/>
+    <script type="text/javascript">
+          $(function(){
+            $('a.external').leaveNotice({
+              siteName:"the NIST Interatomic Potentials Repository Project"
+            });
+          });
+        </script>
+    <link rel="stylesheet" href="../../site/font-awesome-4.7.0/css/font-awesome.min.css"/>
+    <!-- Sidebar for atomman and iprPy CSS -->
+    <link rel="stylesheet" href="../../site/tools-sidebar.css"/>
+  </head>
+  <body>
+    <!-- Static navbar -->
+    <nav xmlns="" class="navbar navbar-expand-lg my-primary">
+      <div class="container text-white">
+        <!-- header -->
+        <img src="../../site/logo.png" height="30"/>
+        <h4 class="mb-1">Interatomic Potentials Repository</h4>
+        <!-- button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-expanded="false" aria-controls="navbarSupportedContent" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"/>
+        </button>
+        <!-- navbar -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="../../"><i class="fa fa-home" aria-hidden="true">&#160;</i>Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="../../atomman">atomman</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="../../iprPy">iprPy</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown" role="button" href="#">Content <span class="caret"/></a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="../../faq.html">FAQ</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="../../refs.html">All References</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="../../requests.html">Requests</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="../../resources.html">External Resources</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="../../activities.html">Workshops</a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle text-white" data-bs-toggle="dropdown" role="button" href="#">Site Info <span class="caret"/></a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="../../credits.html">People</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="../../new.html">Updates</a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/cdn-cgi/l/email-protection#95e5fae1f0fbe1fcf4f9e6d5fbfce6e1bbf2fae3aac6e0f7fff0f6e1a8dbdcc6c1b0a7a5c5fae1f0fbe1fcf4f9e6b0a7a5c7f0e5fae6fce1fae7ec" target="_top"><i class="fa fa-envelope" aria-hidden="true">&#160;</i>Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Include content pages -->
+    <div class="container" id="contentdiv">
+      <div class="alert alert-success alert-dismissible mt-2" role="alert">
+    <strong>Calculation update!</strong> New properties have been added to the website for dislocation monopole core structures, dynamic relaxes of both crystal and liquid phases, and melting temperatures!  Currently, the results for these properties predominately focus on EAM-style potentials, but the results will be updated for other potentials as the associated calculations finish.  Feel free to give us feedback on the new properties so we can improve their representations as needed.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+      <div>
+  <div class="alert alert-warning alert-dismissible mt-2" role="alert">
+  <strong>Warning!</strong> Note that elemental potentials taken from alloy descriptions may not work well for the pure species. This is particularly true if the elements were fit for compounds instead of being optimized separately. As with all interatomic potentials, please check to make sure that the performance is adequate for your problem.
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+  <div class="card mb-4">
+  <!--Potential ID-->
+  <div class="card-header">
+    <h5>
+      <a href="../../entry/2004--Mishin-Y--Ni-Al">2004--Mishin-Y--Ni-Al</a>
+    </h5>
+  </div>
+  <ul class="list-group list-group-flush">
+    <!--Model description-->
+    <li class="list-group-item">
+      <!--Citations and abstracts-->
+      <div class="citation"><b>Citation: </b>Y. Mishin (2004), "Atomistic modeling of the &#947; and &#947;'-phases of the Ni-Al system", <i>Acta Materialia</i> <b>52(6)</b>, 1451-1467. DOI: <a href="https://doi.org/10.1016/j.actamat.2003.11.026" class="external">10.1016/j.actamat.2003.11.026</a>.</div>
+      <div class="abstract"><b>Abstract: </b>A new embedded-atom potential has been developed for Ni<sub>3</sub>Al by fitting to experimental and first-principles data. The potential describes lattice properties of Ni<sub>3</sub>Al, point defects, planar faults, as well as the &#947; and &#947;&#8242; fields on the Ni&#8211;Al phase diagram. The potential is applied to calculate the energies of coherent Ni/Ni<sub>3</sub>Al interphase boundaries with three different crystallographic orientations. Depending on the orientation, the interface energy varies between 12 and 46 mJ/m2. Coherent &#947;/&#947;&#8242; interfaces existing at high temperatures are shown to be more diffuse and are likely to have a lower energy than Ni/Ni<sub>3</sub>Al interfaces.</div>
+      <!--Description notes-->
+      <br/>
+      <!--Related models-->
+      <b>Related Models:</b>
+      <div class="accordion" id="related-models">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#related-models-2004--Mishin-Y--Ni-Al-Al" aria-controls="related-models-2004--Mishin-Y--Ni-Al-Al">Al  <span class="badge text-bg-secondary">3</span></button>
+          </h2>
+          <div class="accordion-collapse collapse" id="related-models-2004--Mishin-Y--Ni-Al-Al">
+            <div class="accordion-body">
+              <ul>
+                <li>
+                  <a href="../../entry/2003--Zope-R-R-Mishin-Y--Al">2003--Zope-R-R-Mishin-Y--Al</a>
+                </li>
+                <li>
+                  <a href="../../entry/2003--Zope-R-R-Mishin-Y--Ti-Al">2003--Zope-R-R-Mishin-Y--Ti-Al</a>
+                </li>
+                <li>
+                  <a href="../../entry/2024--Hayakawa-S-Xu-H--Fe-Ni-Al">2024--Hayakawa-S-Xu-H--Fe-Ni-Al</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#related-models-2004--Mishin-Y--Ni-Al-Al-Ni" aria-controls="related-models-2004--Mishin-Y--Ni-Al-Al-Ni">Al-Ni  <span class="badge text-bg-secondary">1</span></button>
+          </h2>
+          <div class="accordion-collapse collapse" id="related-models-2004--Mishin-Y--Ni-Al-Al-Ni">
+            <div class="accordion-body">
+              <ul>
+                <li>
+                  <a href="../../entry/2024--Hayakawa-S-Xu-H--Fe-Ni-Al">2024--Hayakawa-S-Xu-H--Fe-Ni-Al</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#related-models-2004--Mishin-Y--Ni-Al-Ni" aria-controls="related-models-2004--Mishin-Y--Ni-Al-Ni">Ni  <span class="badge text-bg-secondary">9</span></button>
+          </h2>
+          <div class="accordion-collapse collapse" id="related-models-2004--Mishin-Y--Ni-Al-Ni">
+            <div class="accordion-body">
+              <ul>
+                <li>
+                  <a href="../../entry/2009--Purja-Pun-G-P-Mishin-Y--Ni-Al">2009--Purja-Pun-G-P-Mishin-Y--Ni-Al</a>
+                </li>
+                <li>
+                  <a href="../../entry/2015--Purja-Pun-G-P-Yamakov-V-Mishin-Y--Ni-Al-Co">2015--Purja-Pun-G-P-Yamakov-V-Mishin-Y--Ni-Al-Co</a>
+                </li>
+                <li>
+                  <a href="../../entry/2015--Purja-Pun-G-P-Yamakov-V-Mishin-Y--Ni-Co">2015--Purja-Pun-G-P-Yamakov-V-Mishin-Y--Ni-Co</a>
+                </li>
+                <li>
+                  <a href="../../entry/2016--Beland-L-K-Lu-C-Osetskiy-Y-N-et-al--Ni-Co">2016--Beland-L-K-Lu-C-Osetskiy-Y-N-et-al--Ni-Co</a>
+                </li>
+                <li>
+                  <a href="../../entry/2016--Samolyuk-G-D-Beland-L-K-Stocks-G-M-Stoller-R-E--Ni-Pd">2016--Samolyuk-G-D-Beland-L-K-Stocks-G-M-Stoller-R-E--Ni-Pd</a>
+                </li>
+                <li>
+                  <a href="../../entry/2016--Stoller-R-E-Tamm-A-Beland-L-K-et-al--Ni">2016--Stoller-R-E-Tamm-A-Beland-L-K-et-al--Ni</a>
+                </li>
+                <li>
+                  <a href="../../entry/2017--Bonny-G-Bakaev-A-Olsson-P-et-al--Fe-Cr-Ni">2017--Bonny-G-Bakaev-A-Olsson-P-et-al--Fe-Cr-Ni</a>
+                </li>
+                <li>
+                  <a href="../../entry/2019--Fischer-F-Schmitz-G-Eich-S-M--Cu-Ni">2019--Fischer-F-Schmitz-G-Eich-S-M--Cu-Ni</a>
+                </li>
+                <li>
+                  <a href="../../entry/2024--Hayakawa-S-Xu-H--Fe-Ni-Al">2024--Hayakawa-S-Xu-H--Fe-Ni-Al</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <!--Add implementations-->
+    <li class="list-group-item">
+      <div class="format"><b>EAM tabulated functions</b> (2004--Mishin-Y--Ni-Al--table--ipr1)</div>
+      <div class="implementation-notes"><b>Notes: </b>These files were provided by Yuri Mishin.  Update 2 Sept 2020: parameter files renamed to avoid naming conflict issue.<br/><b>File(s): </b><div id="239e4f9a-145d-4c93-a967-73fb3ba28fea" style="display:block">Al F(&rho;): <a href="../../Download/2004--Mishin-Y--Ni-Al/1/F_al.plt">F_al.plt</a><br/>Ni F(&rho;): <a href="../../Download/2004--Mishin-Y--Ni-Al/1/F_ni.plt">F_ni.plt</a><br/>Al &rho;(r): <a href="../../Download/2004--Mishin-Y--Ni-Al/1/fal.plt">fal.plt</a><br/>Ni &rho;(r): <a href="../../Download/2004--Mishin-Y--Ni-Al/1/fni.plt">fni.plt</a><br/>Al &phi;(r): <a href="../../Download/2004--Mishin-Y--Ni-Al/1/pal.plt">pal.plt</a><br/>Ni &phi;(r): <a href="../../Download/2004--Mishin-Y--Ni-Al/1/pni.plt">pni.plt</a><br/>Ni-Al &phi;(r): <a href="../../Download/2004--Mishin-Y--Ni-Al/1/pnial.plt">pnial.plt</a><br/></div><br/></div>
+    </li>
+    <li class="list-group-item">
+      <div class="format">
+        <b>LAMMPS pair_style eam/alloy</b>
+        <a href="../../entry/2004--Mishin-Y--Ni-Al/2004--Mishin-Y--Ni-Al--LAMMPS--ipr1.html"> (2004--Mishin-Y--Ni-Al--LAMMPS--ipr1)</a>
+      </div>
+      <div class="implementation-notes"><a href="../../entry/2004--Mishin-Y--Ni-Al/2004--Mishin-Y--Ni-Al--LAMMPS--ipr1.html"><b>See Computed Properties</b></a><br/><b>Notes: </b>This conversion was produced by Chandler Becker on 7 Jan 2009 from the plt files listed above. This version is compatible with LAMMPS. Validation and usage information can be found in NiAl04_releaseNotes_2.pdf. If you use this setfl file, please include the following citation (in addition to the Mishin reference): C.A. Becker, et al. (2011) Philos Mag 91(27) 3578-3597. UPDATE 14 Dec 2020: This version is noted as having non-zero energies for the isolated atoms. Because of this, the potential energies computed for bulk structures are correct, but they do not correspond to cohesive energies.  An updated version is listed below.<br/><b>File(s): superseded</b><div id="ed17e8a5-986c-4a78-8a1a-373964dc1d64" style="display:none"><a href="../../Download/2004--Mishin-Y--Ni-Al/2/NiAl.eam.alloy">NiAl.eam.alloy</a><br/><a href="../../Download/2004--Mishin-Y--Ni-Al/2/NiAl04_releaseNotes_2.pdf">NiAl04_releaseNotes_2.pdf</a><br/></div><br/><div id="button-ed17e8a5-986c-4a78-8a1a-373964dc1d64" style="display:block"><input type="button" value="Click to show" onclick="showFiles('ed17e8a5-986c-4a78-8a1a-373964dc1d64','button-ed17e8a5-986c-4a78-8a1a-373964dc1d64')"/><br/><br/></div></div>
+    </li>
+    <li class="list-group-item">
+      <div class="format">
+        <b>OpenKIM</b>
+        <a href="../../entry/2004--Mishin-Y--Ni-Al/MO_101214310689.html"> (MO_101214310689)</a>
+      </div>
+      <div class="implementation-notes"><a href="../../entry/2004--Mishin-Y--Ni-Al/MO_101214310689.html"><b>See Computed Properties</b></a><br/><b>Notes: </b>Listing found at https://openkim.org.  This KIM potential is based on the files from 2004--Mishin-Y--Ni-Al--LAMMPS--ipr1.<br/><b>Link(s): </b><div id="83eb32be-ad05-484c-8b43-b5d0788298ba" style="display:block">KIM page <a href="https://openkim.org/id/EAM_Dynamo_Mishin_2004_NiAl__MO_101214310689_005" class="external">EAM_Dynamo_Mishin_2004_NiAl__MO_101214310689_005</a><br/></div><br/></div>
+    </li>
+    <li class="list-group-item">
+      <div class="format">
+        <b>LAMMPS pair_style eam/alloy</b>
+        <a href="../../entry/2004--Mishin-Y--Ni-Al/2004--Mishin-Y--Ni-Al--LAMMPS--ipr2.html"> (2004--Mishin-Y--Ni-Al--LAMMPS--ipr2)</a>
+      </div>
+      <div class="implementation-notes"><a href="../../entry/2004--Mishin-Y--Ni-Al/2004--Mishin-Y--Ni-Al--LAMMPS--ipr2.html"><b>See Computed Properties</b></a><br/><b>Notes: </b>This file was created by Lucas Hale and posted 12 Dec 2020 with the permission of Yuri Mishin. The tables in this file were obtained by using cubic spline interpolations of the plt files listed above. This version differs from the last LAMMPS version in that it explicitly sets F(rho=0) = 0 so that isolated atoms have an energy of 0.0. The two LAMMPS versions behave nearly identically except at very small r and at r near the cutoff. See "Version 2 notes.pdf" for a more detailed comparison of the two versions.<br/><b>File(s): </b><div id="3ea69be1-e464-493a-bbf7-e75bc44ef22d" style="display:block"><a href="../../Download/2004--Mishin-Y--Ni-Al/4/NiAl_Mishin_2004.eam.alloy">NiAl_Mishin_2004.eam.alloy</a><br/><a href="../../Download/2004--Mishin-Y--Ni-Al/4/Version 2 notes.pdf">Version 2 notes.pdf</a><br/></div><br/></div>
+    </li>
+  </ul>
+</div>
+
+</div>
+
+      <div>Date Created: October 5, 2010 | Last updated: September 29, 2025</div>
+      <br/>
+    </div>
+    <!-- Bootstrap core JavaScript -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">//</script>
+  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e798bfce8eaff82',t:'MTc3NTQwMjUzMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
