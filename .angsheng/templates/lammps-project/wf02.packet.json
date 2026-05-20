@@ -1,0 +1,23 @@
+{
+  "stage": "WF-02",
+  "selected_potential": {
+    "family": "",
+    "pair_style": "",
+    "pair_coeff_pattern": "",
+    "files": []
+  },
+  "potential_candidates": [],
+  "element_mapping": [],
+  "evidence_refs": [],
+  "known_risks": [],
+  "blocked_by": [],
+  "fallback_options": [],
+  "handoff_to_wf03a": {
+    "required_inputs": [
+      "pair_style",
+      "pair_coeff_pattern",
+      "element_mapping"
+    ],
+    "notes": "WF-03A should consume the selected potential and explicit mapping rather than re-deciding them from scratch."
+  }
+}

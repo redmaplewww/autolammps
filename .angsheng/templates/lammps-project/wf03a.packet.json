@@ -1,0 +1,22 @@
+{
+  "stage": "WF-03A",
+  "input_files": [],
+  "source_examples": [],
+  "manual_refs": [],
+  "structure_inputs": [],
+  "potential_inputs": [],
+  "risk_points": [],
+  "unresolved_assumptions": [],
+  "review_status": "draft",
+  "rollback_targets": [
+    "WF-02",
+    "WF-01"
+  ],
+  "handoff_to_execute": {
+    "required_inputs": [
+      "input_files",
+      "review_status"
+    ],
+    "notes": "Execution should consume reviewed input artifacts and preserve the exact files used in the run metadata."
+  }
+}

@@ -1,0 +1,23 @@
+# HEA melt-solidify workflow skeleton
+units           metal
+dimension       3
+boundary        p p p
+atom_style      atomic
+
+read_data       data.hea
+
+pair_style      eam/alloy
+pair_coeff      * * potential.eam.alloy E1 E2 E3 E4 E5
+
+variable        T_init equal 300
+variable        T_melt equal 2200
+variable        T_melt_hold equal 2200
+variable        T_quench equal 300
+
+thermo          100
+thermo_style    custom step temp pe ke etotal press vol
+
+timestep        0.001
+
+# Add staged heating, hold, and cooling blocks.
+# Confirm whether a separate relaxation stage is required.

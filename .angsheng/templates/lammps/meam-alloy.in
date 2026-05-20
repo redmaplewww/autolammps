@@ -1,0 +1,20 @@
+# MEAM alloy workflow skeleton
+units           metal
+dimension       3
+boundary        p p p
+atom_style      atomic
+
+read_data       data.system
+
+pair_style      meam
+pair_coeff      * * library.meam E1 E2 E3 params.meam MAP1 MAP2
+
+neighbor        2.0 bin
+neigh_modify    every 1 delay 0 check yes
+
+thermo          100
+thermo_style    custom step temp pe ke etotal press vol
+
+timestep        0.001
+
+# Verify library extraction elements vs atom-type mapping before use.

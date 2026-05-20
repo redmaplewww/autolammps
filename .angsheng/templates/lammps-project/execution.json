@@ -1,0 +1,30 @@
+{
+  "default_mode": "local",
+  "local": {
+    "command": [],
+    "log_flag": "-log"
+  },
+  "linux": {
+    "command": [
+      "lmp"
+    ],
+    "log_flag": "-log"
+  },
+  "windows": {
+    "command": [
+      "lmp"
+    ],
+    "log_flag": "-log"
+  },
+  "hpc": {
+    "launcher": [
+      "mpirun",
+      "-np",
+      "4"
+    ],
+    "lammps_command": [
+      "lmp"
+    ],
+    "log_flag": "-log"
+  }
+}
