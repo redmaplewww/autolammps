@@ -32,7 +32,6 @@ src/utils/vendor/
 .angsheng/sessions/
 .angsheng/backups/
 .angsheng/projects/
-.angsheng/plugins/
 .angsheng/shell-snapshots/
 .angsheng/teams/
 .angsheng/telemetry/
