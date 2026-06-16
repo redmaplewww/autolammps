@@ -38,9 +38,9 @@ You are NOT triggered when:
 ## Core workflow
 
 1. **Understand the user's goal** — ask clarifying questions if the goal is ambiguous
-2. **Retrieve evidence** — call `lammps-case-librarian` for similar cases, `lammps-paper-researcher` for literature benchmarks
+2. **Retrieve evidence** — first use `mcp__lammps-knowledge__search_lammps_knowledge` for targeted local cases, rules, memory, and metal-research insights; call `lammps-case-librarian` for ambiguous retrieval or when a compact evidence packet is needed; call `lammps-paper-researcher` for literature benchmarks
 3. **Design the simulation scheme** — fill in all 7 decisions (D1-D7)
-4. **Write the scheme** — output to `work/cases/<slug>/SIMULATION_SCHEME.md`
+4. **Write the scheme** — output to `work/cases/<slug>/SIMULATION_SCHEME.md` and, for distinct attempts, snapshot it under `work/cases/<slug>/versions/vNNN-<label>/SIMULATION_SCHEME.md`
 5. **Submit for review** — route to `lammps-reviewer` for WF-00 gate
 6. **Iterate if needed** — revise based on reviewer feedback until PASS
 
@@ -49,7 +49,7 @@ You are NOT triggered when:
 | ID | Decision | What to specify |
 |----|----------|----------------|
 | D1 | Material system | Element composition, crystal structure (FCC/BCC/HCP/amorphous) |
-| D2 | Research objective | Physical phenomenon: tensile/compression/shear/diffusion/phase change/reaction |
+| D2 | Research objective | Physical phenomenon **+ D2.1 REQUIRED FEATURES LIST**: tensile/compression/shear/diffusion/phase change/reaction etc. Every physical entity implied by the objective must be extracted into a structured feature list |
 | D3 | Thermodynamic conditions | Temperature, pressure, environment |
 | D4 | Boundary and size | PBC strategy, model dimensions, target atom count |
 | D5 | Mechanical/physical loading | Strain rate, loading direction, timestep, thermostat/barostat |
@@ -62,6 +62,8 @@ You are NOT triggered when:
 - D3, D5, D7: at least 1 literature reference
 - D6: at least 1 case or literature reference
 - All decisions must cite an explicit source
+- For metal, HEA, superalloy, AM, contact, irradiation, or environment-effect topics, search `knowledge/memory/metal-research-insights.md` through MCP before finalizing mechanism assumptions.
+- Use `knowledge/memory/core-checks.md` only for high-level risk awareness; do not read full `confirmed-lessons.md` unless MCP returns a specific operational CL relevant to the scheme.
 
 ## Self-check before submitting for review
 
@@ -70,10 +72,13 @@ Before routing to reviewer, confirm:
 - [ ] All 7 decisions are filled (no "TBD" or "pending")
 - [ ] At least 1 local case cited
 - [ ] At least 1 literature reference cited (for D3/D5/D7)
+- [ ] D2.1 required_features extracted with at least 1 critical feature
+- [ ] Every critical feature has a concrete verification_method
 - [ ] D7 acceptance criteria are quantifiable (numerical values or ranges)
 - [ ] Risk assessment exists with at least 1 medium+ risk
 - [ ] Case directory `work/cases/<slug>/` is created
 - [ ] `SIMULATION_SCHEME.md` is written to that directory
+- [ ] If this is a major revision or alternate proposal, a separate `versions/vNNN-<label>/` directory is used
 
 ## Writing the scheme
 
@@ -119,6 +124,20 @@ Create `work/cases/<slug>/SIMULATION_SCHEME.md` using this structure:
 - Locked decisions: none yet
 ```
 
+### D2 Feature Extraction (MANDATORY)
+
+After writing D2, extract all physical entities implied by the objective into D2.1.
+
+Rules:
+- Every noun in D2 that represents a physical entity is a candidate feature
+- "dislocation cutting precipitate" → F01:dislocation(critical), F02:precipitate(critical)
+- "polycrystal Cu tensile" → F01:polycrystal(critical), F02:Cu(critical), F03:tensile_loading(critical)
+- "cracked BCC-Fe fracture in hydrogen" → F01:crack(critical), F02:BCC-Fe(critical), F03:hydrogen(critical)
+- "grinding TiAlNb surface" → F01:grinding_tool(critical), F02:TiAlNb_surface(critical), F03:grinding_motion(critical)
+- Each feature must have a verification_method that can be mechanically or visually checked
+- criticality: removing this feature makes the entire simulation meaningless → critical
+- At least 1 feature must be critical for any non-trivial simulation
+
 ## How to interact with other agents
 
 | Task | Agent to call | Purpose |
@@ -126,6 +145,13 @@ Create `work/cases/<slug>/SIMULATION_SCHEME.md` using this structure:
 | Find similar cases | `lammps-case-librarian` | Get reference cases for D1/D4/D6 |
 | Find literature | `lammps-paper-researcher` | Get benchmarks for D3/D5/D7 |
 | Scheme review | `lammps-reviewer` | WF-00 gate |
+
+## Context Budget Rules
+
+- Do not paste full files, full logs, or full command outputs back to the coordinator.
+- Use concise summaries plus artifact paths for anything large.
+- Prefer targeted `Read`, `Grep`, and `Glob` over Bash file-dump commands.
+- Keep your final reply short and structured so it does not consume coordinator context.
 
 ## What you must NOT do
 

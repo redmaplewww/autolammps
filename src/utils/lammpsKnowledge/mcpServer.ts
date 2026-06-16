@@ -23,6 +23,13 @@ import {
 } from './remoteIndexer.js'
 import { listVersions, restoreVersion } from './backupManager.js'
 import { isRemoteConfigured, getRemoteDir } from './remoteCommon.js'
+import { getLayeredIndexStatus, buildLayeredIndex } from './layeredIndexer.js'
+import {
+  findCases,
+  getEntity,
+  getLinked,
+  verifyScript,
+} from './layeredSearch.js'
 
 const TOOLS: Tool[] = [
   {
@@ -41,7 +48,10 @@ const TOOLS: Tool[] = [
         fileType: { type: 'string' },
         sourceTypes: { type: 'array', items: { type: 'string' } },
         autoIndex: { type: 'boolean' },
-        includeRemote: { type: 'boolean', description: 'Also search remote knowledge index.' },
+        includeRemote: {
+          type: 'boolean',
+          description: 'Also search remote knowledge index.',
+        },
       },
       required: ['query'],
       additionalProperties: false,
@@ -111,13 +121,19 @@ const TOOLS: Tool[] = [
   },
   {
     name: 'sync_knowledge_backup',
-    description:
-      'List backup versions or restore to a specific version.',
+    description: 'List backup versions or restore to a specific version.',
     inputSchema: {
       type: 'object' as const,
       properties: {
-        action: { type: 'string', enum: ['list', 'restore'], description: 'List versions or restore to a specific version.' },
-        version: { type: 'integer', description: 'Version number to restore (only for restore action).' },
+        action: {
+          type: 'string',
+          enum: ['list', 'restore'],
+          description: 'List versions or restore to a specific version.',
+        },
+        version: {
+          type: 'integer',
+          description: 'Version number to restore (only for restore action).',
+        },
       },
       additionalProperties: false,
     },
@@ -130,6 +146,129 @@ const TOOLS: Tool[] = [
       type: 'object' as const,
       properties: {
         mode: { type: 'string', enum: ['incremental', 'full'] },
+      },
+      additionalProperties: false,
+    },
+  },
+  {
+    name: 'find_cases',
+    description:
+      'Search the LAMMPS case library by structured filters (family, material, potential, subType). ' +
+      'Returns matching input script files with full content. Use this BEFORE writing any LAMMPS input script ' +
+      'to find working reference cases. Supports Chinese aliases (拉伸→mechanical-loading, 铜→Cu, 剪切→shear).',
+
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        intent: {
+          type: 'string',
+          enum: ['write_input', 'setup_model', 'fix_error', 'analyze'],
+          description:
+            'Agent intent. write_input = search for reference scripts to adapt.',
+        },
+        family: {
+          type: 'string',
+          description:
+            'Case family: mechanical-loading, melt-solidify, reactive-and-deposition, machining, etc.',
+        },
+        subType: {
+          type: 'string',
+          description:
+            'Simulation sub-type: tensile, compress, shear, melt, solidify, deposition, shock, etc.',
+        },
+        material: {
+          type: 'string',
+          description:
+            'Material system: Cu, Al, Fe, CoCrFeMnNi, TiAl, NiTi, etc.',
+        },
+        potential: {
+          type: 'string',
+          description:
+            'Potential type: eam, eam/alloy, eam/fs, meam, tersoff, reaxff, lj, etc.',
+        },
+        query: {
+          type: 'string',
+          description:
+            'Free-text search (FTS fallback). Use only when filter labels are insufficient.',
+        },
+        topK: { type: 'integer', minimum: 1, maximum: 20 },
+        includeContent: {
+          type: 'boolean',
+          description: 'Include full input file content (default true).',
+        },
+        maxLines: {
+          type: 'integer',
+          description: 'Max lines per file content (default 200).',
+        },
+      },
+      additionalProperties: false,
+    },
+  },
+  {
+    name: 'get_entity',
+    description:
+      'Get full details of a LAMMPS knowledge entity by ID. Returns content, metadata, linked files, and related entities.',
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        id: {
+          type: 'string',
+          description: 'Entity ID (e.g. "case/knowledge/cases/raw/__/NPT").',
+        },
+        includeContent: { type: 'boolean' },
+        maxLines: { type: 'integer' },
+      },
+      required: ['id'],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: 'get_linked',
+    description:
+      'Get entities linked to/from a specific entity. Navigate the knowledge graph: case → checks, check → cases.',
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        id: { type: 'string', description: 'Entity ID to get links for.' },
+        relType: {
+          type: 'string',
+          description: 'Relationship type: has_check, applies_to.',
+        },
+        direction: {
+          type: 'string',
+          enum: ['outgoing', 'incoming'],
+          description: 'Link direction (default outgoing).',
+        },
+        topK: { type: 'integer', minimum: 1, maximum: 50 },
+      },
+      required: ['id'],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: 'verify_script',
+    description:
+      'Verify LAMMPS script against mandatory checks (CL-001~CL-019). ' +
+      'Provide script content or commands list to get triggered checks and pass/fail status. ' +
+      'Use this AFTER writing a LAMMPS input script to validate correctness.',
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        commands: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'List of LAMMPS commands used in the script.',
+        },
+        scriptContent: {
+          type: 'string',
+          description: 'Full script content for trigger matching.',
+        },
+        scope: {
+          type: 'string',
+          enum: ['full', 'deformation', 'potential', 'minimization', 'npt'],
+          description: 'Validation scope (default full).',
+        },
+        maxResults: { type: 'integer', minimum: 1, maximum: 50 },
       },
       additionalProperties: false,
     },
@@ -218,14 +357,30 @@ export async function runLammpsKnowledgeMcpServer(): Promise<void> {
 
         if (name === 'sync_knowledge_pull') {
           if (!isRemoteConfigured()) {
-            return { isError: true, content: [{ type: 'text', text: 'Remote not configured. Set LAMMPS_KNOWLEDGE_REMOTE_URL and LAMMPS_KNOWLEDGE_REMOTE_TOKEN.' }] }
+            return {
+              isError: true,
+              content: [
+                {
+                  type: 'text',
+                  text: 'Remote not configured. Set LAMMPS_KNOWLEDGE_REMOTE_URL and LAMMPS_KNOWLEDGE_REMOTE_TOKEN.',
+                },
+              ],
+            }
           }
           return asText(await pullFromRemote(workspaceRoot))
         }
 
         if (name === 'sync_knowledge_push') {
           if (!isRemoteConfigured()) {
-            return { isError: true, content: [{ type: 'text', text: 'Remote not configured. Set LAMMPS_KNOWLEDGE_REMOTE_URL and LAMMPS_KNOWLEDGE_REMOTE_TOKEN.' }] }
+            return {
+              isError: true,
+              content: [
+                {
+                  type: 'text',
+                  text: 'Remote not configured. Set LAMMPS_KNOWLEDGE_REMOTE_URL and LAMMPS_KNOWLEDGE_REMOTE_TOKEN.',
+                },
+              ],
+            }
           }
           return asText(await pushToRemote(workspaceRoot))
         }
@@ -238,12 +393,25 @@ export async function runLammpsKnowledgeMcpServer(): Promise<void> {
           const payload = (args ?? {}) as Record<string, unknown>
           const action = payload.action === 'restore' ? 'restore' : 'list'
           if (action === 'restore') {
-            const version = typeof payload.version === 'number' ? payload.version : 0
+            const version =
+              typeof payload.version === 'number' ? payload.version : 0
             if (version <= 0) {
-              return { isError: true, content: [{ type: 'text', text: 'version is required for restore action.' }] }
+              return {
+                isError: true,
+                content: [
+                  {
+                    type: 'text',
+                    text: 'version is required for restore action.',
+                  },
+                ],
+              }
             }
             const remoteDir = getRemoteDir(workspaceRoot)
-            const result = await restoreVersion(version, remoteDir, workspaceRoot)
+            const result = await restoreVersion(
+              version,
+              remoteDir,
+              workspaceRoot,
+            )
             return asText(result)
           }
           return asText(await listVersions(workspaceRoot))
@@ -255,7 +423,113 @@ export async function runLammpsKnowledgeMcpServer(): Promise<void> {
           return asText(
             mode === 'full'
               ? await buildRemoteKnowledgeIndex({ workspaceRoot })
-              : await updateRemoteKnowledgeIndexIncrementally({ workspaceRoot }),
+              : await updateRemoteKnowledgeIndexIncrementally({
+                  workspaceRoot,
+                }),
+          )
+        }
+
+        if (name === 'find_cases') {
+          const payload = (args ?? {}) as Record<string, unknown>
+          return asText(
+            findCases({
+              intent:
+                typeof payload.intent === 'string'
+                  ? (payload.intent as 'write_input')
+                  : undefined,
+              family:
+                typeof payload.family === 'string' ? payload.family : undefined,
+              subType:
+                typeof payload.subType === 'string'
+                  ? payload.subType
+                  : undefined,
+              material:
+                typeof payload.material === 'string'
+                  ? payload.material
+                  : undefined,
+              potential:
+                typeof payload.potential === 'string'
+                  ? payload.potential
+                  : undefined,
+              query:
+                typeof payload.query === 'string' ? payload.query : undefined,
+              topK: typeof payload.topK === 'number' ? payload.topK : undefined,
+              includeContent:
+                typeof payload.includeContent === 'boolean'
+                  ? payload.includeContent
+                  : undefined,
+              maxLines:
+                typeof payload.maxLines === 'number'
+                  ? payload.maxLines
+                  : undefined,
+            }),
+          )
+        }
+
+        if (name === 'get_entity') {
+          const payload = (args ?? {}) as Record<string, unknown>
+          const result = getEntity({
+            id: String(payload.id ?? ''),
+            includeContent:
+              typeof payload.includeContent === 'boolean'
+                ? payload.includeContent
+                : undefined,
+            maxLines:
+              typeof payload.maxLines === 'number'
+                ? payload.maxLines
+                : undefined,
+          })
+          if (!result) {
+            return {
+              isError: true,
+              content: [
+                { type: 'text', text: `Entity not found: ${payload.id}` },
+              ],
+            }
+          }
+          return asText(result)
+        }
+
+        if (name === 'get_linked') {
+          const payload = (args ?? {}) as Record<string, unknown>
+          return asText(
+            getLinked({
+              id: String(payload.id ?? ''),
+              relType:
+                typeof payload.relType === 'string'
+                  ? payload.relType
+                  : undefined,
+              direction:
+                typeof payload.direction === 'string'
+                  ? (payload.direction as 'outgoing' | 'incoming')
+                  : undefined,
+              topK: typeof payload.topK === 'number' ? payload.topK : undefined,
+            }),
+          )
+        }
+
+        if (name === 'verify_script') {
+          const payload = (args ?? {}) as Record<string, unknown>
+          return asText(
+            verifyScript({
+              commands: Array.isArray(payload.commands)
+                ? payload.commands.filter(
+                    (c): c is string => typeof c === 'string',
+                  )
+                : undefined,
+              scriptContent:
+                typeof payload.scriptContent === 'string'
+                  ? payload.scriptContent
+                  : undefined,
+              scope:
+                typeof payload.scope === 'string'
+                  ? (payload.scope as 'full' | 'deformation' | 'potential')
+                  : undefined,
+              maxResults:
+                typeof payload.maxResults === 'number'
+                  ? payload.maxResults
+                  : undefined,
+            }),
           )
         }
 

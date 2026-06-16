@@ -929,6 +929,21 @@ function extractMetadata(
   const lowerPath = relativePath.toLowerCase()
   const combined = `${relativePath}\n${content}`
   const lower = combined.toLowerCase()
+  if (
+    lowerPath === 'knowledge/memory/core-checks.md' ||
+    lowerPath === 'knowledge/memory/confirmed-lessons.md' ||
+    lowerPath === 'knowledge/memory/index.md'
+  ) {
+    return {
+      family: null,
+      materialSystem: null,
+      potentialFamily: detectPotentialFamily(lower),
+      stage: detectStage(combined),
+      caseWeight: null,
+      caseReliability: null,
+      caseUsage: null,
+    }
+  }
   return {
     family: caseMetadata?.family ?? detectFamily(lower),
     materialSystem:

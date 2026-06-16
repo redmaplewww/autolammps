@@ -1,6 +1,9 @@
 #!/usr/bin/env bun
 import { feature } from 'bun:bundle';
 import { isEnvTruthy } from '../utils/envUtils.js';
+import { applyEmbeddedProviderEnv } from '../embeddedEnv.js';
+
+applyEmbeddedProviderEnv();
 
 // Runtime fallback for MACRO.* when not injected by build/dev defines.
 // This happens when running cli.tsx directly (not via `bun run dev` or built dist/).
@@ -124,6 +127,16 @@ async function main(): Promise<void> {
     const { runComputerUseMcpServer } = await import('../utils/computerUse/mcpServer.js');
     await runComputerUseMcpServer();
     return;
+  } else if (process.argv[2] === '--lammps-knowledge-mcp') {
+    profileCheckpoint('cli_lammps_knowledge_mcp_path');
+    const { runLammpsKnowledgeMcpServer } = await import('../utils/lammpsKnowledge/mcpServer.js');
+    await runLammpsKnowledgeMcpServer();
+    return;
+  } else if (process.argv[2] === '--lammps-kb-pipeline-mcp') {
+    profileCheckpoint('cli_lammps_kb_pipeline_mcp_path');
+    const { runLammpsKbPipelineMcpServer } = await import('../utils/lammpsKbPipeline/mcpServer.js');
+    await runLammpsKbPipelineMcpServer();
+    return;
   }
 
   // Fast-path for `--acp` — ACP (Agent Client Protocol) agent mode over stdio.
@@ -237,6 +250,41 @@ async function main(): Promise<void> {
     initSinks();
     const { daemonMain } = await import('../daemon/main.js');
     await daemonMain(args.slice(1));
+    return;
+  }
+
+  // Fast-path for `aura hpc <status|results|cancel>`: query the HPC tracker.
+  if (feature('HPC_TRACKER') && args[0] === 'hpc') {
+    profileCheckpoint('cli_hpc_path');
+    const { enableConfigs } = await import('../utils/config.js');
+    enableConfigs();
+    const { setShellIfWindows } = await import('../utils/windowsPaths.js');
+    setShellIfWindows();
+    const { hpcStatusHandler, hpcResultsHandler, hpcCancelHandler } = await import('../cli/hpc.js');
+    const sub = args[1] || 'status';
+    if (sub === 'status') {
+      await hpcStatusHandler();
+      return;
+    }
+    if (sub === 'results') {
+      const jobId = args[2];
+      if (!jobId) {
+        console.error('Usage: aura hpc results <job-id>');
+        return;
+      }
+      await hpcResultsHandler(jobId);
+      return;
+    }
+    if (sub === 'cancel') {
+      const jobId = args[2];
+      if (!jobId) {
+        console.error('Usage: aura hpc cancel <job-id>');
+        return;
+      }
+      await hpcCancelHandler(jobId);
+      return;
+    }
+    console.error('Usage: aura hpc [status|results <job-id>|cancel <job-id>]');
     return;
   }
 

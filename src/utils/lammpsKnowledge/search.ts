@@ -329,7 +329,7 @@ export async function searchKnowledge(
 
     const preferredFileType = preferredFileTypes[0] ?? ''
     const preferredSourceType = preferredSourceTypes[0] ?? ''
-    const materialAlias = input.materialSystem ?? hints.materialAliases[0] ?? ''
+    const materialAlias = input.materialSystem ?? ''
     const materialPathLike = materialAlias
       ? `%${materialAlias.replace(/-/g, '')}%`
       : ''
@@ -378,7 +378,7 @@ export async function searchKnowledge(
       filters: {
         topK,
         family,
-        materialSystem: input.materialSystem ?? (materialAlias || undefined),
+        materialSystem: input.materialSystem,
         potentialFamily,
         stage,
         fileType: input.fileType,
@@ -699,11 +699,18 @@ function inferPreferredFileTypes(query: string): string[] {
   ) {
     return ['input', 'markdown', 'potential']
   }
-  if (/paper|literature|doi|arxiv|citation|reference|文献|论文/.test(query)) {
-    return ['markdown', 'text']
-  }
   if (/脚本|input|in\.lmp|in\./.test(query)) {
     return ['input', 'markdown']
+  }
+  if (
+    /pair_style|pair_coeff|fix |compute |dump |variable |read_data|read_restart|fix deform|thermo_style|manual|命令|语法|格式|写法/.test(
+      query,
+    )
+  ) {
+    return ['input', 'markdown', 'text']
+  }
+  if (/paper|literature|doi|arxiv|citation|reference|文献|论文/.test(query)) {
+    return ['markdown', 'text']
   }
   if (/分析|analysis|thermo|ovito|vmd|visual/.test(query)) {
     return ['markdown', 'log']
@@ -765,6 +772,7 @@ function computeQuerySpecificBonus<
   let bonus = 0
 
   if (hints.queryType === 'rule_judge') {
+    if (path.includes('knowledge/memory/core-checks.md')) bonus += 22
     if (path.includes('knowledge/memory/confirmed-lessons.md')) bonus += 18
     if (path.includes('knowledge/rules/')) bonus += 10
     if (row.source_type === 'experience') bonus += 8
@@ -772,6 +780,8 @@ function computeQuerySpecificBonus<
   }
 
   if (hints.queryType === 'syntax_lookup') {
+    if (path.includes('knowledge/memory/core-checks.md')) bonus += 16
+    if (path.includes('knowledge/memory/confirmed-lessons.md')) bonus += 10
     if (row.source_type === 'manual_reference') bonus += 14
     if (path.includes('knowledge/manuals/lammps/')) bonus += 10
     if (hints.shouldPreferConcreteSnippets && row.file_type === 'input')
@@ -791,9 +801,38 @@ function computeQuerySpecificBonus<
 
   if (hints.queryType === 'workflow_summary') {
     if (row.source_type === 'experience') bonus += 16
+    if (path.includes('knowledge/memory/metal-research-insights.md'))
+      bonus += 18
+    if (path.includes('knowledge/memory/core-checks.md')) bonus += 10
     if (path.includes('knowledge/memory/confirmed-lessons.md')) bonus += 12
     if (row.source_type === 'knowledge_summary') bonus += 2
     if (row.source_type === 'raw_case' && row.file_type === 'input') bonus -= 3
+  }
+
+  if (
+    /metal research|metal-research|research insights|literature insights|金属|hea|superalloy|gamma|ni3al|additive|irradiation|environment/i.test(
+      normalized,
+    )
+  ) {
+    if (path.includes('knowledge/memory/metal-research-insights.md'))
+      bonus += 30
+  }
+
+  if (
+    /cl-\d{3}|core check|core-check|mandatory operational|confirmed lesson/i.test(
+      normalized,
+    )
+  ) {
+    if (path.includes('knowledge/memory/core-checks.md')) bonus += 24
+    if (path.includes('knowledge/memory/confirmed-lessons.md')) bonus += 18
+  }
+
+  if (
+    /knowledge memory index|memory index|routing|route reviewer|检索路由|知识路由/i.test(
+      normalized,
+    )
+  ) {
+    if (path.includes('knowledge/memory/index.md')) bonus += 50
   }
 
   if (/怎么定义|定义|哪一行|写法|变量/.test(normalized)) {
@@ -1114,6 +1153,13 @@ function buildDirectPathCandidates(
       110,
       'confirmed-lessons.md',
     )
+  }
+  if (
+    /knowledge memory index|memory index|route reviewer|routing|检索路由|知识路由/i.test(
+      normalized,
+    )
+  ) {
+    addCandidate('knowledge/memory/INDEX.md', 150, 'knowledge-memory-index.md')
   }
 
   return results

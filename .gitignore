@@ -30,38 +30,16 @@ src/utils/vendor/
 
 # Session data
 .angsheng/sessions/
-.angsheng/backups/
 .angsheng/projects/
-.angsheng/shell-snapshots/
-.angsheng/teams/
-.angsheng/telemetry/
-
-# Runtime / generated project data
-.lammps-project/
-.migration-backups/
-benchmarking/
-project-memory/
-scratchpad/
-work/
-
-# Large transfer archives and local artifacts
-*.zip
-*.7z
-*.sqlite
-
-# Exclude bulky simulation assets by default
-knowledge/cases/raw/
-knowledge/cases/paper-reproduction/**/*.eam*
-knowledge/cases/paper-reproduction/**/*.lammpstrj
-knowledge/cases/paper-reproduction/**/*.data
-knowledge/cases/paper-reproduction/**/*.plt
-knowledge/cases/paper-reproduction/**/*.csv
-knowledge/cases/paper-reproduction/**/log.lammps
-
-# Root/local simulation scratch files
-/*.lmp
-/*.lammpstrj
-/*.data
+.angsheng/file-history/
+.angsheng/pipes/
+.angsheng/history.jsonl
+.angsheng/daemon/
+.angsheng/plugins/marketplaces/
+.angsheng/backups/
+.angsheng/cache/*.sqlite
+.angsheng/cache/*.sqlite-*
+*.consolidate-lock
 
 # Python bytecode
 __pycache__/
