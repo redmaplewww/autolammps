@@ -1,0 +1,48 @@
+units metal
+atom_style atomic
+boundary p p p
+
+# TiAl L1_0: Create structure and fully relax (both atoms and box)
+lattice custom 3.998 a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 4.187 &
+  basis 0.0 0.0 0.0 basis 0.5 0.5 0.0 basis 0.5 0.0 0.5 basis 0.0 0.5 0.5
+region box block 0 4 0 4 0 4 units lattice
+create_box 2 box
+create_atoms 1 box basis 1 2 basis 2 2 basis 3 1 basis 4 1
+mass 1 47.867
+mass 2 26.982
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+
+# Fully relax box
+fix 1 all box/relax x 0.0 y 0.0 z 0.0
+minimize 1e-10 1e-10 10000 100000
+unfix 1
+
+# Get results
+variable natoms equal count(all)
+variable nTi equal count(type 1)
+variable nAl equal count(type 2)
+variable a0 equal lx/4
+variable c0 equal lz/4
+variable ca equal lz/lx
+variable Etot equal pe
+variable Eper equal pe/256
+
+# Compute formation energy
+# E_form = E_pot(TiAl) - 0.5*E_pot(Ti) - 0.5*E_pot(Al)
+# From EAM: E_pot(Al) = -3.36, E_pot(Ti) = -4.843
+variable E_form equal ${Eper} - 0.5*(-4.843) - 0.5*(-3.36)
+
+print ""
+print "=============================================="
+print "TiAl L1_0 RESULTS (from EAM)")
+print "=============================================="
+print "Atoms: ${natoms} (Ti=${nTi}, Al=${nAl})"
+print "Lattice: a = ${a0} A, c = ${c0} A, c/a = ${ca}"
+print "Paper values: a = 3.998 A, c/a = 1.047"
+print "Energy = ${Eper} eV/atom"
+print "Formation energy = ${E_form} eV/atom"
+print "Paper formation: -0.404 eV/atom"
+print "=============================================="

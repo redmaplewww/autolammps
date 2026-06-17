@@ -1,0 +1,32 @@
+# Evaluate one gamma-TiAl (111) fault slab
+# Usage:
+#   lmp -var data_file fault_structures/tial_111_perfect.data -in paper1_tial_fault_eval.in
+
+units metal
+atom_style atomic
+boundary p p f
+
+read_data ${data_file}
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+neighbor 2.0 bin
+neigh_modify delay 0 every 1
+
+region lower block INF INF INF INF INF 51.1698543622 units box
+region upper block INF INF INF INF 51.1698543622 INF units box
+group lower region lower
+group upper region upper
+
+# relax only normal direction; keep in-plane registry fixed
+fix relax all setforce 0.0 0.0 NULL
+
+min_style cg
+minimize 1e-12 1e-12 20000 20000
+run 0
+
+variable pefinal equal pe
+variable natoms equal atoms
+variable area equal 1370.8397603035
+
+print "RESULT data=${data_file} pe=${pefinal} natoms=${natoms} area=${area}"

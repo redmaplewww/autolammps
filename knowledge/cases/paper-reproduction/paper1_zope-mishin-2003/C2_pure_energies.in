@@ -1,0 +1,32 @@
+# C2: Pure element cohesive energies: Ti (hcp) and Al (fcc)
+units metal
+atom_style atomic
+boundary p p p
+
+# ======= Pure Ti hcp (4x4x4 = 256 atoms) =======
+# hcp: a = 2.95, c/a = 1.587, ideal c = 4.684
+variable a_ti equal 2.95
+variable c_ti equal 2.95*1.587
+
+lattice custom $(a_ti) a1 1.0 0.0 0.0 a2 0.5 0.866025 0.0 a3 0.0 0.0 $(c_ti/a_ti)
+region r_ti block 0 4 0 4 0 4 units lattice
+create_box 1 r_ti
+create_atoms 1 box
+mass 1 47.867
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Ti
+neighbor 2.0 bin neigh_modify delay 5 every 1
+
+fix 1 all box/relax iso 0.0
+minimize 1e-10 1e-10 10000 100000
+unfix 1
+
+variable N_ti equal count(all)
+variable E_ti equal pe
+variable E_ti_pa equal pe/${N_ti}
+
+print ""
+print "========================================="
+print "Ti hcp: ${E_ti_pa} eV/atom"
+print "========================================="

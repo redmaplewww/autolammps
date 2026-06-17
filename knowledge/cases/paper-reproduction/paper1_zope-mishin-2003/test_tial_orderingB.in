@@ -1,0 +1,27 @@
+units metal
+atom_style atomic
+boundary p p p
+
+# ORDERING B: Ti at corners, Al at edges
+lattice custom 3.998 a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 4.187 &
+  basis 0.0 0.0 0.0 basis 0.5 0.0 0.5 basis 0.0 0.5 0.5 basis 0.5 0.5 0.0
+region boxB block 0 2 0 2 0 2 units lattice
+create_box 2 boxB
+# Ti at basis 1,4 (type 1); Al at basis 2,3 (type 2)
+create_atoms 1 box basis 1 1 basis 2 2 basis 3 2 basis 4 1
+mass 1 47.867
+mass 2 26.982
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+minimize 1e-10 1e-10 10000 100000
+variable EB equal pe/count(all)
+group gTiB type 1
+group gAlB type 2
+variable nTiB equal count(gTiB)
+variable nAlB equal count(gAlB)
+print ""
+print "ORDERING B: Ti at corners, Al at edges"
+print "Atoms: Ti=${nTiB}, Al=${nAlB}, E=${EB} eV/atom"
+print "Expected: -4.509 eV/atom"

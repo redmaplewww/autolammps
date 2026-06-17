@@ -1,0 +1,23 @@
+units metal
+atom_style atomic
+boundary p p p
+# L1_0 structure: a=3.998, c=4.187
+lattice custom 3.998 a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 4.187 &
+  basis 0.0 0.0 0.0 basis 0.5 0.0 0.5 basis 0.0 0.5 0.5 basis 0.5 0.5 0.0
+region box block 0 4 0 4 0 4 units lattice
+create_box 2 box
+# Al at basis 1,4 (type 2); Ti at basis 2,3 (type 1)
+create_atoms 1 box basis 1 2 basis 2 1 basis 3 1 basis 4 2
+mass 1 47.867
+mass 2 26.982
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+minimize 1e-10 1e-10 10000 100000
+variable E equal pe/count(all)
+variable Etot equal pe
+print ""
+print "TiAl L1_0: E = ${E} eV/atom (total: ${Etot} eV)"
+print "Expected: -4.509 eV/atom"
+print "Formation: should be -0.404 eV/atom"

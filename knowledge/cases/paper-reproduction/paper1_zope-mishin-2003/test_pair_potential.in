@@ -1,0 +1,59 @@
+units metal
+atom_style atomic
+boundary p p p
+
+# Test pair potential between two Ti atoms at various distances
+# Create two atoms at distance r, compute energy
+
+# Ti-Ti pair test
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+
+# Create two atoms
+create_box 1 box
+lattice none 1.0
+
+# Test at various distances
+variable r1 equal 2.5
+variable r2 equal 2.95
+variable r3 equal 3.5
+variable r4 equal 4.0
+
+# At r=2.5
+create_atoms 1 single 0.0 0.0 0.0
+create_atoms 1 single ${r1} 0.0 0.0
+minimize 1e-10 1e-10 1000 10000
+variable Etot equal pe
+print ""
+print "r = ${r1} Angstrom, Ti-Ti energy = ${Etot} eV"
+
+# Reset
+clear
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+create_box 1 box
+create_atoms 1 single 0.0 0.0 0.0
+create_atoms 1 single ${r2} 0.0 0.0
+minimize 1e-10 1e-10 1000 10000
+variable Etot2 equal pe
+print "r = ${r2} Angstrom, Ti-Ti energy = ${Etot2} eV"
+
+clear
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+create_box 1 box
+create_atoms 1 single 0.0 0.0 0.0
+create_atoms 1 single ${r3} 0.0 0.0
+minimize 1e-10 1e-10 1000 10000
+variable Etot3 equal pe
+print "r = ${r3} Angstrom, Ti-Ti energy = ${Etot3} eV"
+
+clear
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+create_box 1 box
+create_atoms 1 single 0.0 0.0 0.0
+create_atoms 1 single ${r4} 0.0 0.0
+minimize 1e-10 1e-10 1000 10000
+variable Etot4 equal pe
+print "r = ${r4} Angstrom, Ti-Ti energy = ${Etot4} eV"

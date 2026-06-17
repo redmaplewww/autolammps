@@ -1,0 +1,61 @@
+# Paper 1D: gamma-TiAl planar fault energies on (111)
+# Use oriented L10 cell with:
+#   x || [1-10]
+#   y || [11-2]
+#   z || [111]
+# Run with variables:
+#   -var label SISF -var shiftx 0.0 -var shifty 1.11368855
+
+units metal
+atom_style atomic
+boundary p p p
+
+variable a0 equal 3.998
+variable c0 equal ${a0}*1.047
+variable caratio equal ${c0}/${a0}
+
+lattice custom ${a0} &
+  a1 1.0 0.0 0.0 &
+  a2 0.0 1.0 0.0 &
+  a3 0.0 0.0 ${caratio} &
+  basis 0.0 0.0 0.0 &
+  basis 0.0 0.5 0.5 &
+  basis 0.5 0.0 0.0 &
+  basis 0.5 0.5 0.5 &
+  orient x 1 -1 0 &
+  orient y 1 1 -2 &
+  orient z 1 1 1
+
+region box block 0 6 0 4 0 12 units lattice
+create_box 2 box
+create_atoms 1 box basis 1 1 basis 2 1 basis 3 2 basis 4 2
+
+mass 1 47.867
+mass 2 26.982
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+neighbor 2.0 bin
+neigh_modify delay 0 every 1
+
+min_style cg
+minimize 1e-12 1e-12 5000 10000
+run 0
+
+variable eperf0 equal $(pe)
+variable area equal lx*ly
+variable zmid equal lz/2
+
+region upper block INF INF INF INF ${zmid} INF units box
+group upper region upper
+
+displace_atoms upper move ${shiftx} ${shifty} 0.0 units box
+
+# relax only normal direction to preserve registry
+fix relax all setforce 0.0 0.0 NULL
+minimize 1e-12 1e-12 5000 10000
+run 0
+
+variable efault0 equal $(pe)
+variable gamma0 equal (${efault0}-${eperf0})/(2.0*${area})*16021.76634
+
+print "FAULT_RESULT label=${label} eperf=${eperf0} efault=${efault0} area=${area} gamma=${gamma0}"

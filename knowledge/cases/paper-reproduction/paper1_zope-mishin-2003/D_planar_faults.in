@@ -1,0 +1,78 @@
+# D: Planar Fault Energies in gamma-TiAl
+# SISF and CSF on {111} plane; APB on {110} plane
+units metal
+atom_style atomic
+boundary p p p
+
+# ============================================================
+# L1_0 conventional cell parameters
+# ============================================================
+variable a0 equal 3.998
+variable c0 equal 3.998*1.047
+
+# ============================================================
+# Compute perfect TiAl reference energy
+# ============================================================
+lattice custom $(a0) a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 $(c0/a0) &
+  basis 0.0 0.0 0.0 &
+  basis 0.5 0.0 0.5 &
+  basis 0.0 0.5 0.5 &
+  basis 0.5 0.5 0.0
+
+region box block 0 4 0 4 0 4 units lattice
+create_box 2 box
+create_atoms 1 box basis 1 1 basis 2 2 basis 3 2 basis 4 1
+mass 1 26.982 mass 2 47.867
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Al Ti
+neighbor 2.0 bin neigh_modify delay 5 every 1
+
+fix 1 all box/relax x 0.0 y 0.0 z 0.0 couple none fixed 0 0 0
+minimize 1e-10 1e-10 10000 100000
+unfix 1
+
+variable N equal count(all)
+variable V0 equal vol
+variable E_perf equal pe
+variable area_110 equal lx*ly
+variable area_111 equal lx*ly  # Will recalculate for (111) oriented cell
+
+print ""
+print "============================================"
+print "Perfect gamma-TiAl: E = ${E_perf} eV"
+print "N atoms = ${N}, V = ${V0} A^3"
+print "LX = $(v_lx), LY = $(v_ly), LZ = $(v_lz)"
+print "============================================"
+print ""
+print "APB on {110} plane"
+print "Fault area = ${area_110} A^2"
+print "Expected: 266 mJ/m^2"
+print "============================================"
+
+# ============================================================
+# APB on (110) plane: displacement 1/2[110]
+# ============================================================
+variable apb_disp equal 0.5
+
+# Upper half shift by (a/2, a/2, 0)
+variable zmid equal lz/2
+region upper block INF INF INF INF ${zmid} INF units lattice
+group upper region upper
+
+# Compute displacement vector in box coordinates
+variable dx equal $(v_a0 * v_apb_disp / v_lx)
+variable dy equal $(v_a0 * v_apb_disp / v_ly)
+variable dz equal 0.0
+
+displace_atoms upper shift ${dx} ${dy} ${dz}
+
+# Note: we don't re-minimize after fault creation
+# to preserve the exact fault configuration
+variable E_apb equal pe
+variable gamma_apb equal (${E_apb}-${E_perf})/${area_110}*16021.8
+
+print "APB: E = ${E_apb} eV, gamma = ${gamma_apb} mJ/m^2"
+
+group upper delete
+uncompute all

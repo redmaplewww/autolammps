@@ -1,0 +1,90 @@
+# E: TiAl L1_0 and Ti3Al D0_19 Formation Energies
+# E_form = E_total - n_Ti*E_coh(Ti) - n_Al*E_coh(Al)
+units metal
+atom_style atomic
+boundary p p p
+
+# --- Compute E_coh for TiAl L1_0 ---
+variable a0 equal 3.998
+variable c0 equal 3.998*1.047
+
+# L1_0 conventional cell (4 atoms)
+lattice custom $(a0) a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 $(c0/a0) &
+  basis 0.0 0.0 0.0 &
+  basis 0.5 0.0 0.5 &
+  basis 0.0 0.5 0.5 &
+  basis 0.5 0.5 0.0
+
+region r1 block 0 4 0 4 0 4 units lattice
+create_box 2 r1
+create_atoms 1 box basis 1 1 basis 2 2 basis 3 2 basis 4 1
+
+mass 1 26.982 mass 2 47.867
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Al Ti
+neighbor 2.0 bin neigh_modify delay 5 every 1
+
+fix 1 all box/relax x 0.0 y 0.0 z 0.0 couple none fixed 0 0 0
+minimize 1e-10 1e-10 10000 100000
+unfix 1
+
+variable N_tial equal count(all)
+variable E_tial equal pe
+variable E_tial_pa equal pe/${N_tial}
+
+print ""
+print "=== TiAl L1_0 ==="
+print "E_coh(TiAl) = ${E_tial_pa} eV/atom"
+
+# --- Compute E_coh for pure Ti hcp ---
+# hcp: a=2.95, c/a=1.587
+variable a_ti equal 2.95
+variable c_ti equal 2.95*1.587
+
+lattice custom $(a_ti) a1 1.0 0.0 0.0 a2 0.5 0.866025403784 a3 0.0 0.0 $(c_ti/a_ti) &
+  basis 0.0 0.0 0.0 basis 2.0e-6 0.666667 0.5
+
+change_box all lattice $(a_ti)
+region r_ti block 0 4 0 4 0 4 units lattice
+create_box 1 r_ti
+create_atoms 1 box basis 1 1 basis 2 1
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Ti
+neighbor 2.0 bin neigh_modify delay 5 every 1
+
+fix 2 all box/relax iso 0.0
+minimize 1e-10 1e-10 10000 100000
+unfix 2
+
+variable E_ti equal pe
+variable E_ti_pa equal pe/count(all)
+print "E_coh(Ti, hcp) = ${E_ti_pa} eV/atom"
+
+# --- Compute E_coh for pure Al fcc ---
+# fcc: a=4.05
+variable a_al equal 4.05
+lattice fcc $(a_al)
+region r_al block 0 4 0 4 0 4 units lattice
+create_box 1 r_al
+create_atoms 1 box
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Al Al
+neighbor 2.0 bin neigh_modify delay 5 every 1
+
+fix 3 all box/relax iso 0.0
+minimize 1e-10 1e-10 10000 100000
+unfix 3
+
+variable E_al equal pe
+variable E_al_pa equal pe/count(all)
+print "E_coh(Al, fcc) = ${E_al_pa} eV/atom"
+
+# --- Formation energies ---
+# TiAl: E_form = E_coh(TiAl) - 0.5*E_coh(Ti) - 0.5*E_coh(Al)
+variable Ef_tial equal ${E_tial_pa} - 0.5*${E_ti_pa} - 0.5*${E_al_pa}
+print ""
+print "=== Formation Energies ==="
+print "E_form(TiAl L1_0) = ${Ef_tial} eV/atom"
+print "Expected: -0.404 eV/atom"
+print "============================================"

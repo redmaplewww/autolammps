@@ -1,0 +1,65 @@
+# Paper 2: Ni Tensile Test (Qin 2024 workflow)
+# Ni EAM: NiAl_Mishin_2004.eam.alloy
+# FCC Ni, 5x5x5 conventional cells = 500 atoms
+units metal
+atom_style atomic
+boundary p p p
+
+variable aNi equal 3.52
+variable L equal 5*${aNi}
+
+# Set lattice FIRST (before region)
+lattice fcc ${aNi}
+
+# Create box in BOX units (Angstroms)
+region box block 0 ${L} 0 ${L} 0 ${L} units box
+create_box 1 box
+create_atoms 1 box
+
+mass 1 58.693
+pair_style eam/alloy
+pair_coeff * * NiAl_Mishin_2004.eam.alloy Ni
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+
+timestep 0.001
+thermo 100
+
+# NPT relaxation
+fix 1 all npt temp 300 300 0.1 iso 0 0 1
+compute t1 all temp
+compute p1 all pressure t1
+print ""
+print "=== NPT relaxation at 300K ==="
+run 5000
+unfix 1
+
+# Record relaxed box size
+variable lx0 equal lx
+print "Relaxed Lx = ${lx0}"
+
+# NVT equilibration
+fix 2 all nvt temp 300 300 0.1
+print "=== NVT equilibration ==="
+run 2000
+unfix 2
+
+# Tensile deformation
+fix 3 all nvt temp 300 300 0.1
+fix 4 all deform 1 x scale 1.0001 remap x
+
+print ""
+print "============================================"
+print "Paper 2: Ni Tensile Test"
+print "============================================"
+print "Ni lattice: ${aNi} A  (exp: 3.524 A)"
+print "Temperature: 300 K, Atoms: 500"
+print "Strain rate: ~1e9 s^-1"
+print "============================================"
+
+thermo 100
+thermo_style custom step lx c_p1[1]
+run 10000
+
+print ""
+print "Final: Lx = $(lx), Stress = $(c_p1[1]) bar"

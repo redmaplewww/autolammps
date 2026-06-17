@@ -1,0 +1,17 @@
+units metal
+atom_style atomic
+boundary p p p
+region r prism 0 4 0 4 0 4 0 0 0 units box
+create_box 1 r
+variable i loop 4
+label li
+variable j loop 4
+label lj
+  create_atoms 1 single ${i} ${j} 0 units box
+  print "i=${i} j=${j}"
+next j
+jump SELF lj
+next i
+jump SELF li
+variable n equal count(all)
+print "Total atoms = ${n} (expect 16)"

@@ -1,0 +1,31 @@
+units metal
+atom_style atomic
+atom_modify map hash
+boundary p p p
+
+variable a equal 2.89
+
+# Create box
+lattice none 1.0
+region box prism 0 3 0 3 0 3 0 0 0
+create_box 1 box
+
+# Create two Ti atoms at distance ${a}
+create_atoms 1 single 0.0 0.0 0.0
+create_atoms 1 single ${a} 0.0 0.0
+
+mass 1 47.867
+
+# Use Zope-Mishin potential
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti
+
+# Compute energy
+compute e all pe
+variable Etot equal c_e
+variable Eatoms equal c_e/2
+run 0
+print "Total energy: ${Etot}"
+print "Energy per atom: ${Eatoms}"
+print "Expected Ti-Ti phi at ${a}: -1.013 eV = -0.0745 Rydberg"
+print "If E/atom = F(rho) + 0.5*phi, then F = E - 0.5*phi"

@@ -1,0 +1,32 @@
+# Test EAM potential: pure Al fcc and pure Ti hcp
+units metal
+atom_style atomic
+boundary p p p
+
+# ===== Al fcc =====
+# EAM file: element 1=Ti, element 2=Al
+# So for type 2 (Al), use "Al" in pair_coeff
+lattice fcc 4.05
+region r1 block 0 4 0 4 0 4 units lattice
+create_box 1 r1
+create_atoms 1 box
+mass 1 26.982
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Al
+
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+minimize 1e-10 1e-10 10000 100000
+
+variable E_al equal pe/count(all)
+print ""
+print "Al fcc: E = ${E_al} eV/atom"
+print "Expected E_pot: -3.36 eV/atom (NIST)"
+print ""
+
+# Now test Ti hcp
+# For Ti, need type 1 (first element in file = Ti)
+# But our create_box only has type 1, so we need to use element "Ti"
+# pair_coeff * 1 Ti means: type 1 = Ti (element 1 in file)
+# pair_coeff 1 1 Ti means: type 1-type 1 interaction uses Ti

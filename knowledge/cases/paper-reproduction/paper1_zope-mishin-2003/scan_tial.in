@@ -1,0 +1,38 @@
+units metal
+atom_style atomic
+boundary p p p
+
+# Scan TiAl L1_0 energy vs lattice constant
+# Fix a = 3.998, vary c
+
+variable a equal 3.998
+
+print ""
+print "=============================================="
+print "TiAl L1_0: Energy vs c/a ratio"
+print "=============================================="
+
+# Loop over c values
+variable ca loop 10
+variable c equal ${a}*(${ca}*0.01+0.90)
+variable ca_val equal ${ca}*0.01+0.90
+
+lattice custom ${a} a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 v_c &
+  basis 0.0 0.0 0.0 basis 0.5 0.0 0.5 basis 0.0 0.5 0.5 basis 0.5 0.5 0.0
+region box block 0 2 0 2 0 2 units lattice
+create_box 2 box
+create_atoms 1 box basis 1 2 basis 2 1 basis 3 1 basis 4 2
+mass 1 47.867
+mass 2 26.982
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti Al
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+
+minimize 1e-10 1e-10 1000 10000
+variable E equal pe/count(all)
+print "c/a=${ca_val:.2f}, E=${E:.4f} eV/atom"
+
+clear
+next ca
+print "Done"

@@ -1,0 +1,84 @@
+node_modules
+.DS_Store
+dist
+coverage
+.env
+*.log
+.idea
+.vscode
+*.suo
+*.lock
+src/utils/vendor/
+
+# AI tool runtime directories
+.agents/
+.claude/
+.omx/
+.docs/task/
+.playwright-cli/
+/*.png
+*.bmp
+
+# Agent / tool state dirs
+.swarm/
+.agents/__pycache__/
+
+# Feishu poll state files
+.feishu-poll-*.json
+.feishu-poll-state.json
+
+# Session data
+.angsheng/sessions/
+.angsheng/projects/
+.angsheng/file-history/
+.angsheng/pipes/
+.angsheng/history.jsonl
+.angsheng/daemon/
+.angsheng/plugins/marketplaces/
+.angsheng/backups/
+.angsheng/worktrees/
+.angsheng/shell-snapshots/
+.angsheng/telemetry/
+.angsheng/tasks/
+
+# SQLite cache (raw) — only ship compressed .gz versions
+.angsheng/cache/*.sqlite
+.angsheng/cache/*.sqlite-wal
+.angsheng/cache/*.sqlite-shm
+*.consolidate-lock
+
+# Python bytecode
+__pycache__/
+*.pyc
+logs
+
+data
+.omc
+.codex/*
+!.codex/agents/
+!.codex/agents/**
+!.codex/skills/
+!.codex/skills/**
+.codex/skills/.system/**
+!.codex/prompts/
+!.codex/prompts/**
+nul
+
+# === Large binary files — NEVER commit ===
+*.lammpstrj
+*.dump
+knowledge/cases/raw/**/*.lmp
+knowledge/cases/raw/**/*.data
+*.7z
+knowledge/cases/raw/*.7z
+work/cases/**/dump.*
+work/cases/**/log.lammps
+scratch/
+temp_*.out
+temp_*.err
+*.tmp
+work/**/*.eam.alloy
+work/**/*.eam.fs
+work/**/*.meam
+work/**/*.reaxff
+work/**/*.tersoff

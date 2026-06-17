@@ -1,0 +1,40 @@
+units metal
+atom_style atomic
+atom_modify map hash
+boundary p p p
+
+variable a equal 2.95
+variable c_a equal 1.586
+
+# Create hcp Ti - use proper lattice command
+lattice hcp ${a}
+region box block 0 3 0 3 0 2
+create_box 1 box
+create_atoms 1 box
+
+mass 1 47.867
+
+# Set c/a ratio - need to adjust box dimensions manually
+# hcp lattice: a is in-plane NN distance, c = c/a * a
+# For ideal hcp: c/a = sqrt(8/3) = 1.633, but Ti has 1.586
+# LAMMPS hcp lattice uses ideal c/a by default
+# To get correct c/a, we need to create the box with correct dimensions
+
+print ""
+print "=== Ti hcp energy ==="
+print "Expected: -4.843 eV/atom"
+print ""
+
+# Use EAM potential
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti
+
+# Compute energy
+thermo 1
+minimize 1e-10 1e-10 1000 10000
+run 0
+print ""
+print "After minimization:"
+print "Energy: $(pe)"
+print "Atoms: $(atoms)"
+print "Energy per atom: $(pe)/$(atoms)"

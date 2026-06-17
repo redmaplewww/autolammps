@@ -1,0 +1,38 @@
+# Verify TiAl L1_0 structure
+units metal
+atom_style atomic
+boundary p p p
+
+lattice custom 3.998 a1 1.0 0.0 0.0 a2 0.0 1.0 0.0 a3 0.0 0.0 4.187 &
+  basis 0.0 0.0 0.0 basis 0.5 0.0 0.5 basis 0.0 0.5 0.5 basis 0.5 0.5 0.0
+
+region box block 0 2 0 2 0 2 units lattice
+create_box 2 box
+# Basis 1: Al (type 2), Basis 2: Ti (type 1), Basis 3: Ti (type 1), Basis 4: Al (type 2)
+create_atoms 1 box basis 1 2 basis 2 1 basis 3 1 basis 4 2
+
+# Compute distances to verify structure
+variable N equal count(all)
+print "Total atoms = ${N}"
+
+# Print first 8 atoms positions and types
+variable i equal 1
+label loop
+variable x$i equal x[$i]
+variable y$i equal y[$i]
+variable z$i equal z[$i]
+variable t$i equal type[$i]
+print "Atom $i: type=${t$i}, pos=(${x$i},${y$i},${z$i})"
+variable i equal $i+1
+if $i <= 8 then "jump SELF loop"
+
+# Count atoms by type
+variable nTi equal count(type 1)
+variable nAl equal count(type 2)
+print "Ti atoms = ${nTi}, Al atoms = ${nAl}"
+print "Expected: Ti=16, Al=16 for 2x2x2 supercell"
+
+# Compute nearest neighbor distances
+compute dist all pair dist
+dump 1 all custom 1 dump.pos id type x y z
+run 0

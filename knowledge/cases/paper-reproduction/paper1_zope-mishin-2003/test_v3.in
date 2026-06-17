@@ -1,0 +1,45 @@
+units metal
+atom_style atomic
+atom_modify map hash
+boundary p p p
+
+# Test Ti hcp energy
+lattice hcp 2.95
+region box block 0 3 0 3 0 2
+create_box 1 box
+create_atoms 1 box
+mass 1 47.867
+
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003-v3.eam.alloy Ti
+
+thermo 1
+minimize 1e-10 1e-10 1000 10000
+run 0
+variable Etot equal $(pe)
+variable Eatoms equal $(atoms)
+print ""
+print "=== Ti hcp with v3 potential ==="
+print "Expected: -4.843 eV/atom"
+print "Computed: $(pe)/$(atoms) = $(pe)/$(atoms)"
+
+# Also test 2-atom system
+clear
+units metal
+atom_style atomic
+atom_modify map hash
+boundary p p p
+
+lattice none 1.0
+region box prism 0 2 0 2 0 2 0 0 0
+create_box 1 box
+create_atoms 1 single 0.0 0.0 0.0
+create_atoms 1 single 2.89 0.0 0.0
+mass 1 47.867
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003-v3.eam.alloy Ti
+run 0
+print ""
+print "=== 2-atom Ti at r=2.89 ==="
+print "Expected phi: -1.01 eV"
+print "Energy/atom: $(pe)/2"

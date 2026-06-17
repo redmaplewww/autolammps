@@ -1,0 +1,50 @@
+units metal
+atom_style atomic
+boundary p p p
+
+# Ti hcp: 2x2x2 supercell = 64 atoms
+lattice hcp 2.95
+region box block 0 2 0 2 0 2 units lattice
+create_box 1 box
+create_atoms 1 box
+mass 1 47.867
+pair_style eam/alloy
+pair_coeff * * Zope-Ti-Al-2003.eam.alloy Ti
+
+neighbor 2.0 bin
+neigh_modify delay 5 every 1
+
+# Compute minimum distance between atoms
+compute dist all pair dist
+
+# Print box dimensions
+variable lx0 equal lx
+variable ly0 equal ly
+variable lz0 equal lz
+variable a_calc equal vol^(1/3)
+print ""
+print "Box: lx=${lx0}, ly=${ly0}, lz=${lz0}"
+print "Box volume = $(vol)"
+print "a (from vol) = ${a_calc}"
+
+# Minimize
+minimize 1e-10 1e-10 10000 100000
+
+# Check equilibrium volume
+variable a_eq equal vol^(1/3)
+variable c_eq equal lz/lx*2.95*sqrt(2/3)
+print ""
+print "After relaxation:"
+print "a_eq = ${a_eq}"
+print "c_eq = ${c_eq}"
+
+# Print per-atom energies
+compute peA all pe/atom
+dump 1 all custom 1 dump.tihcp id type c_peA x y z
+run 0
+
+print ""
+print "Energy per atom:"
+variable Eper equal pe/count(all)
+print "E = ${Eper} eV/atom"
+print "Expected: ~-4.87 eV/atom"
