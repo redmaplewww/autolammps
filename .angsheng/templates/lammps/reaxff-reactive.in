@@ -1,0 +1,22 @@
+# ReaxFF reactive workflow skeleton
+units           real
+dimension       3
+boundary        p p p
+atom_style      charge
+
+read_data       data.system
+
+neighbor        2.0 bin
+neigh_modify    every 1 delay 0 check yes
+
+pair_style      reaxff NULL
+pair_coeff      * * ffield.reax ELEMENT1 ELEMENT2
+
+fix             qeq all qeq/reax 1 0.0 10.0 1.0e-6 reaxff
+
+thermo          100
+thermo_style    custom step temp pe ke etotal press
+
+timestep        0.1
+
+# Add groups, constraints, equilibration, dumps, and run blocks.

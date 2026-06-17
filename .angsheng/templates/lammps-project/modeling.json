@@ -1,0 +1,9 @@
+{
+  "atomsk": {
+    "linux": [
+      "atomsk"
+    ],
+    "windows": [],
+    "default_output": "model.lmp"
+  }
+}

@@ -1,0 +1,22 @@
+# Tensile strain workflow skeleton
+units           metal
+dimension       3
+boundary        p p p
+atom_style      atomic
+
+read_data       data.tensile
+
+pair_style      eam/alloy
+pair_coeff      * * potential.eam.alloy E1
+
+variable        tmpx equal "lx"
+variable        Lx0 equal ${tmpx}
+variable        strainx equal "(lx-v_Lx0)/v_Lx0"
+variable        stressx equal "-pxx/10000"
+
+thermo          100
+thermo_style    custom step temp v_strainx v_stressx pe ke etotal press
+
+timestep        0.001
+
+# Add equilibration, fix deform, and output blocks.

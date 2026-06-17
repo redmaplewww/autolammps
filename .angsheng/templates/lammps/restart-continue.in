@@ -1,0 +1,22 @@
+# Restart/data continuation workflow skeleton
+units           metal
+dimension       3
+boundary        p p p
+atom_style      atomic
+
+read_restart    restart.previous
+
+# Or use read_data data.previous after verifying provenance and box size.
+
+pair_style      eam/alloy
+pair_coeff      * * potential.eam.alloy E1
+
+neighbor        2.0 bin
+neigh_modify    every 1 delay 0 check yes
+
+thermo          100
+thermo_style    custom step temp pe ke etotal press vol
+
+timestep        0.001
+
+# Re-declare required fixes and outputs for the continuation stage.
