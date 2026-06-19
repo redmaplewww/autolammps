@@ -556,6 +556,22 @@ export function startDeferredPrefetches(): void {
   void getUserContext();
   prefetchSystemContextIfSafe();
   void getRelevantTips();
+  // Surface pending skill-mine candidates on startup (one-line status).
+  // Non-blocking; failures are swallowed.
+  void import('./skills/skillMine/index.js')
+    .then(({ getStagedPendingSummary }) => getStagedPendingSummary())
+    .then(summary => {
+      if (summary) {
+        // Use the existing debug logger path so it shows in verbose mode only;
+        // the real user-facing surfacing happens through /skill-mine --status
+        // and the staging file count itself.
+        // eslint-disable-next-line no-console
+        console.log(`[skill-mine] ${summary}`)
+      }
+    })
+    .catch(() => {
+      // Non-critical.
+    });
   if (isEnvTruthy(process.env.CLAUDE_CODE_USE_BEDROCK) && !isEnvTruthy(process.env.CLAUDE_CODE_SKIP_BEDROCK_AUTH)) {
     void prefetchAwsCredentialsAndBedRockInfoIfSafe();
   }

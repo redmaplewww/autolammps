@@ -82,3 +82,46 @@ work/**/*.eam.fs
 work/**/*.meam
 work/**/*.reaxff
 work/**/*.tersoff
+
+# Local scratch / research / analysis artifacts
+# (accumulated in worktree, not part of tracked CLI source)
+/docs/
+/installers/
+/release/
+/migration/
+/benchmarking/
+/autolammps/
+/codex/
+/codex-source/
+/codex-analysis/
+/papers/
+/scratchpad/
+/tasks/
+/work/
+/project-memory/
+/agent-improvement-proposals/
+/.lammps-project/
+
+# Codex / deploy comparison & analysis notes (one-offs)
+/codex-*.md
+/codex_*.txt
+/angsheng-ubuntu2204-deploy-notes.md
+
+# Angsheng runtime droppings (backups, caches, plugins)
+/.angsheng/.angsheng.json
+/.angsheng/settings.json.bench-backup
+/.angsheng/cache/changelog.md
+/.angsheng/plugins/
+
+# Loose LAMMPS simulation I/O at repo root
+/*.meam
+/in.HEA_friction
+/friction_data.csv
+/log.lammps
+/inspect-test.txt
+
+# Raw knowledge case dumps (curated index is tracked, raw is not)
+/knowledge/cases/raw/
+
+# Local snapshot / deliverable archives at repo root
+/*.zip
