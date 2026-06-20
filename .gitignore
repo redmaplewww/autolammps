@@ -85,7 +85,6 @@ work/**/*.tersoff
 
 # Local scratch / research / analysis artifacts
 # (accumulated in worktree, not part of tracked CLI source)
-/docs/
 /installers/
 /release/
 /migration/
